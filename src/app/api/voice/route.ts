@@ -1,8 +1,9 @@
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
-import { init, stream } from "playht";
-import { Writable } from "stream";
+import { createClient } from "@deepgram/sdk";
+
+const deepgram = createClient(process.env.DEEPGRAM_API_KEY!);
 
 async function streamGptText(prompt: string) {
   const { textStream } = streamText({
@@ -18,72 +19,53 @@ async function streamGptText(prompt: string) {
   return fullText;
 }
 
-export async function POST(req: Request) {
-  init({
-    apiKey: process.env.NEXT_PUBLIC_PLAYHT_API_KEY!,
-    userId: process.env.NEXT_PUBLIC_PLAYHT_USER_ID!,
-  });
+async function getAudioBuffer(response: ReadableStream) {
+  const reader = response.getReader();
+  const chunks = [];
 
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+  }
+
+  const dataArray = chunks.reduce(
+    (acc, chunk) => Uint8Array.from([...acc, ...chunk]),
+    new Uint8Array(0)
+  );
+
+  return Buffer.from(dataArray.buffer);
+}
+
+export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
-    const signal = req.signal; // Get the abort signal from the request
 
     // Get the GPT stream
     const textStream = await streamGptText(prompt);
 
-    // Configure PlayHT stream
-    const playHTStream = await stream(textStream, {
-      voiceId:
-        "s3://voice-cloning-zero-shot/801a663f-efd0-4254-98d0-5c175514c3e8/jennifer/manifest.json",
-      voiceEngine: "Play3.0-mini",
-      outputFormat: "mp3",
-    });
+    // Generate audio using Deepgram
+    const response = await deepgram.speak.request(
+      { text: textStream },
+      {
+        model: "aura-athena-en",
+        encoding: "linear16",
+        container: "wav",
+      }
+    );
 
-    // Create a transform stream for the response
-    const chunks: Buffer[] = [];
-    const writable = new Writable({
-      write(chunk, encoding, callback) {
-        // Check if request has been aborted
-        if (signal?.aborted) {
-          callback(new Error("Request aborted"));
-          return;
-        }
-        chunks.push(Buffer.from(chunk));
-        callback();
+    const stream = await response.getStream();
+
+    if (!stream) {
+      throw new Error("Failed to generate audio stream");
+    }
+
+    const buffer = await getAudioBuffer(stream);
+
+    return new Response(buffer, {
+      headers: {
+        "Content-Type": "audio/wav",
       },
-    });
-
-    return new Promise((resolve, reject) => {
-      // Handle abort signal
-      signal?.addEventListener("abort", () => {
-        reject(new Error("Request aborted"));
-      });
-
-      playHTStream.pipe(writable);
-
-      writable.on("finish", () => {
-        const buffer = Buffer.concat(chunks);
-        resolve(
-          new Response(buffer, {
-            headers: {
-              "Content-Type": "audio/mpeg",
-            },
-          })
-        );
-      });
-
-      writable.on("error", (err) => {
-        if (err.message === "Request aborted") {
-          reject(new Error("Request aborted"));
-        } else {
-          reject(
-            NextResponse.json(
-              { success: false, error: "Failed to process voice input" },
-              { status: 500 }
-            )
-          );
-        }
-      });
     });
   } catch (error) {
     console.error("Error:", error);

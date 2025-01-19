@@ -106,15 +106,6 @@ export default function AudioControls({
         throw new Error("Failed to get audio stream");
       }
 
-      // Get TTFB metrics from headers
-      const playHTTTFB = response.headers.get("X-PlayHT-TTFB");
-      const chatGptTTFB = response.headers.get("X-ChatGPT-TTFB");
-      if (playHTTTFB && chatGptTTFB) {
-        console.log(
-          `ChatGPT TTFB: ${chatGptTTFB}ms, PlayHT TTFB: ${playHTTTFB}ms`
-        );
-      }
-
       if (audioRef.current) {
         // Create a Blob URL from the streaming response
         const blob = await response.blob();
