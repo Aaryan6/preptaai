@@ -3,13 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff } from "lucide-react";
+import { generateId, Message } from "ai";
 
 interface AudioControlsProps {
-  onSpeechRecognized: (text: string) => void;
+  addToConversation: (message: Message) => void;
+  conversation: Message[];
 }
 
 export default function AudioControls({
-  onSpeechRecognized,
+  addToConversation,
+  conversation,
 }: AudioControlsProps) {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -41,7 +44,7 @@ export default function AudioControls({
             window.SpeechRecognition || window.webkitSpeechRecognition;
           const recognition = new SpeechRecognition();
 
-          recognition.continuous = false;
+          recognition.continuous = true;
           recognition.interimResults = true;
 
           let finalTranscript = "";
@@ -53,8 +56,6 @@ export default function AudioControls({
               const transcript = event.results[i][0].transcript;
               if (event.results[i].isFinal) {
                 finalTranscript = transcript;
-                console.log("Final transcript:", finalTranscript);
-                onSpeechRecognized(`User: ${finalTranscript}`);
                 handleVoiceInput(finalTranscript);
                 finalTranscript = "";
               } else {
@@ -83,22 +84,49 @@ export default function AudioControls({
           alert("Please allow microphone access to use voice features");
         });
     }
-  }, [onSpeechRecognized, isListening]);
+  }, [addToConversation, isListening]);
 
   const handleVoiceInput = async (transcript: string) => {
-    console.log({ transcript });
+    const userMessage = {
+      id: generateId(),
+      role: "user",
+      content: transcript,
+    };
     try {
       setIsProcessing(true);
       stopCurrentAudio();
 
       abortControllerRef.current = new AbortController();
 
+      const chatResponse = await fetch(`/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: [...conversation, userMessage] }),
+        signal: abortControllerRef.current.signal,
+      });
+
+      addToConversation(userMessage as Message);
+
+      const chatData = await chatResponse.json();
+      const textResponse = chatData.text;
+
+      // Add the text response to the conversation
+      if (textResponse) {
+        addToConversation({
+          id: generateId(),
+          role: "assistant",
+          content: textResponse,
+        } as Message);
+      }
+
       const response = await fetch(`/api/voice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: transcript }),
+        body: JSON.stringify({ text: textResponse }),
         signal: abortControllerRef.current.signal,
       });
 
@@ -107,17 +135,15 @@ export default function AudioControls({
       }
 
       if (audioRef.current) {
-        // Create a Blob URL from the streaming response
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
 
         audioRef.current.src = url;
         audioRef.current.onended = () => {
-          URL.revokeObjectURL(url); // Clean up the Blob URL
+          URL.revokeObjectURL(url);
         };
 
         await audioRef.current.play();
-        onSpeechRecognized(`AI: Response to "${transcript}"`);
       }
     } catch (error: unknown) {
       if (error instanceof Error && error.name !== "AbortError") {
@@ -139,20 +165,21 @@ export default function AudioControls({
   };
 
   return (
-    <div className="flex justify-center space-x-4">
+    <div className="flex justify-center">
+      <audio ref={audioRef} className="hidden" />
       <Button
         onClick={toggleMic}
-        variant={isListening ? "default" : "secondary"}
+        variant={isListening ? "default" : "outline"}
+        size="icon"
         disabled={isProcessing}
+        className={isListening ? "bg-primary/10" : ""}
       >
         {isListening ? (
-          <Mic className="mr-2 h-4 w-4" />
+          <Mic className="h-4 w-4" />
         ) : (
-          <MicOff className="mr-2 h-4 w-4" />
+          <MicOff className="h-4 w-4" />
         )}
-        {isListening ? "Stop" : "Start"} {isProcessing && "(Processing...)"}
       </Button>
-      <audio ref={audioRef} className="hidden" />
     </div>
   );
 }

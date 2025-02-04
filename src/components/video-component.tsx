@@ -46,17 +46,17 @@ export default function VideoComponent() {
   };
 
   return (
-    <Card className="mb-4 bg-card text-card-foreground">
-      <CardContent className="p-0 relative">
+    <Card className="mb-4 bg-card text-card-foreground h-full">
+      <CardContent className="p-0 relative h-full">
         {isVideoOn ? (
           <video
             ref={videoRef}
             autoPlay
             muted
-            className="w-full h-[calc(100vh-200px)] object-cover transform scale-x-[-1]"
+            className="w-full h-full object-cover transform scale-x-[-1]"
           />
         ) : (
-          <div className="w-full h-[calc(100vh-200px)] bg-muted flex items-center justify-center">
+          <div className="w-full h-full bg-muted flex items-center justify-center">
             <p className="text-muted-foreground">Camera is off</p>
           </div>
         )}
@@ -64,7 +64,7 @@ export default function VideoComponent() {
           onClick={toggleVideo}
           variant="outline"
           size="icon"
-          className="absolute bottom-4 right-4"
+          className="absolute top-4 right-4 bg-background"
         >
           {isVideoOn ? (
             <VideoOff className="h-4 w-4" />

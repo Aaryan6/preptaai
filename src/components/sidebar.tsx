@@ -1,7 +1,8 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Message } from "ai";
 
 interface ConversationSidebarProps {
-  conversation: string[];
+  conversation: Message[];
 }
 
 export default function ConversationSidebar({
@@ -12,7 +13,7 @@ export default function ConversationSidebar({
       <h2 className="text-lg font-semibold mb-4">Conversation</h2>
       <ScrollArea className="h-[calc(100vh-100px)]">
         {conversation.map((text, index) => {
-          const isUser = text.startsWith("User:");
+          const isUser = text.role === "user";
           return (
             <div
               key={index}
@@ -21,9 +22,9 @@ export default function ConversationSidebar({
               }`}
             >
               <p className="text-sm font-medium mb-1">
-                {isUser ? "You" : "AI Assistant"}
+                {isUser ? "You" : "Emily"}
               </p>
-              <p className="text-sm">{text.replace(/^(User:|AI:)\s*/, "")}</p>
+              <p className="text-sm">{text.content}</p>
             </div>
           );
         })}

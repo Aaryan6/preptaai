@@ -1,9 +1,13 @@
-import InterviewLayout from "@/components/interview-layout";
+import { NavBar } from "@/components/navbar";
+import { HeroSection } from "@/components/hero";
+import { AppPreview } from "@/components/app-preview";
 
-export default function HomePage() {
+export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <InterviewLayout />
-    </main>
+    <div className="min-h-screen bg-purple-50">
+      <NavBar />
+      <HeroSection />
+      <AppPreview />
+    </div>
   );
 }
