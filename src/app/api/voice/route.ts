@@ -6,13 +6,14 @@ const deepgram = createClient(process.env.DEEPGRAM_API_KEY!);
 
 export async function POST(req: Request) {
   try {
-    const { text } = await req.json();
+    const { text, voiceId } = await req.json();
 
     // Generate audio using Deepgram
+
     const response = await deepgram.speak.request(
       { text },
       {
-        model: "aura-athena-en",
+        model: voiceId || "aura-athena-en",
         encoding: "linear16",
         container: "wav",
       }

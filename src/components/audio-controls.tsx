@@ -8,11 +8,13 @@ import { generateId, Message } from "ai";
 interface AudioControlsProps {
   addToConversation: (message: Message) => void;
   conversation: Message[];
+  voiceId: string;
 }
 
 export default function AudioControls({
   addToConversation,
   conversation,
+  voiceId,
 }: AudioControlsProps) {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -126,7 +128,7 @@ export default function AudioControls({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: textResponse }),
+        body: JSON.stringify({ text: textResponse, voiceId }),
         signal: abortControllerRef.current.signal,
       });
 

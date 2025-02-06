@@ -21,20 +21,21 @@ interface InterviewersProps {
 
 const interviewers: Interviewer[] = [
   {
-    id: "john",
-    name: "John",
+    id: "aura-orpheus-en",
+    name: "Orpheus",
     role: "Software Engineering",
     language: "EN",
   },
+
   {
-    id: "richard",
-    name: "Richard",
+    id: "aura-orion-en",
+    name: "Orion",
     role: "Product Management",
     language: "EN",
   },
   {
-    id: "sarah",
-    name: "Sarah",
+    id: "aura-luna-en",
+    name: "Luna",
     role: "Other",
     language: "EN",
   },

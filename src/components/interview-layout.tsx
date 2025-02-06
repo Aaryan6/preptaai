@@ -5,9 +5,13 @@ import { useState } from "react";
 import AudioControls from "./audio-controls";
 import ConversationSidebar from "./sidebar";
 import VideoComponent from "./video-component";
-import { Button } from "./ui/button";
+import { Interview } from "@/lib/types";
 
-export default function InterviewLayout() {
+type InterviewLayoutProps = {
+  interview: Interview;
+};
+
+export default function InterviewLayout({ interview }: InterviewLayoutProps) {
   const [conversation, setConversation] = useState<Message[]>([]);
 
   const addToConversation = (message: Message) => {
@@ -29,6 +33,7 @@ export default function InterviewLayout() {
             <AudioControls
               addToConversation={addToConversation}
               conversation={conversation}
+              voiceId={interview.voice_id || ""}
             />
           </div>
         </div>

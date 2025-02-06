@@ -7,6 +7,7 @@ import Interviewers from "@/app/interview/_components/interviewers";
 import UserDetails from "@/app/interview/_components/user-details";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { createInterview } from "@/actions/interview";
 
 type UserDetailsType = {
   name: string;
@@ -48,13 +49,26 @@ export default function InterviewForm() {
     setStep("userDetails");
   };
 
-  const handleUserDetailsSubmit = (details: UserDetailsType) => {
+  const handleUserDetailsSubmit = async (details: UserDetailsType) => {
     setInterviewData((prev) => ({ ...prev, userDetails: details }));
     // Here you can handle the final submission of all data
     console.log("Final interview data:", {
       ...interviewData,
       userDetails: details,
     });
+
+    const interview = await createInterview({
+      job_role: details.jobRole,
+      user_id: user?.id || "",
+      experience: details.experience,
+      skills: details.skills,
+      type: interviewData.type as string,
+      voice_id: interviewData.interviewerId as string,
+    });
+
+    if (interview) {
+      router.push(`/interview/${interview.id}`);
+    }
   };
 
   const handleBack = () => {
