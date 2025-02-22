@@ -1,9 +1,6 @@
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
-import { SignedIn } from "@clerk/nextjs";
-import { SignInButton } from "@clerk/nextjs";
-import { SignedOut } from "@clerk/nextjs";
+import { ThemeToggle } from "./theme-toggle";
 
 export function NavBar() {
   return (
@@ -15,13 +12,9 @@ export function NavBar() {
           </div>
           <span className="font-semibold text-xl">PreptaAI</span>
         </Link>
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
-            Pricing
-          </Link>
-        </div>
       </div>
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         <SignedOut>
           <SignInButton />
         </SignedOut>

@@ -8,7 +8,7 @@ export function HeroSection() {
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
           Ace your interviews and land your dream job
         </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground dark:text-foreground/70 mb-8 max-w-2xl mx-auto">
           Practice with AI-powered mock interviews and get personalized feedback
           on your resume. Built to help you succeed in your job search.
         </p>

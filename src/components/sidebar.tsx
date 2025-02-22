@@ -9,9 +9,9 @@ export default function ConversationSidebar({
   conversation,
 }: ConversationSidebarProps) {
   return (
-    <div className="w-64 bg-card text-card-foreground p-4 border-r border-border">
+    <div className="max-w-[300px] flex flex-col w-full bg-card text-card-foreground p-4 border-r border-border">
       <h2 className="text-lg font-semibold mb-4">Conversation</h2>
-      <ScrollArea className="h-[calc(100vh-100px)]">
+      <ScrollArea className="h-full">
         {conversation.map((text, index) => {
           const isUser = text.role === "user";
           return (

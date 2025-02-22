@@ -37,42 +37,25 @@ export default function InterviewType({
         get started.
       </p>
       <div className="space-y-4">
-        <Card
-          className={`relative overflow-hidden p-4 transition-colors hover:bg-accent cursor-pointer ${
-            selectedType === "behavioral" ? "border-2 border-primary" : ""
-          }`}
-          role="button"
-          tabIndex={0}
-          onClick={() => setSelectedType("behavioral")}
-        >
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h3 className="font-semibold">Behavioral</h3>
-              <p className="text-sm text-muted-foreground">
-                From LinkedIn, Amazon, Adobe
-              </p>
+        {interviewTypes.map((type) => (
+          <Card
+            key={type.type}
+            className={`relative bg-violet-50 overflow-hidden p-4 transition-colors hover:bg-violet-200 cursor-pointer ${
+              selectedType === type.type ? "border-2 border-primary" : ""
+            }`}
+            role="button"
+            tabIndex={0}
+            onClick={() => setSelectedType(type.type as InterviewType)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h3 className="font-semibold text-black">{type.title}</h3>
+                <p className="text-sm text-zinc-600">{type.description}</p>
+              </div>
+              <Badge variant="secondary">{type.difficulty}</Badge>
             </div>
-            <Badge variant="secondary">Easy</Badge>
-          </div>
-        </Card>
-        <Card
-          className={`relative overflow-hidden p-4 transition-colors hover:bg-accent cursor-pointer ${
-            selectedType === "technical" ? "border-2 border-primary" : ""
-          }`}
-          role="button"
-          tabIndex={0}
-          onClick={() => setSelectedType("technical")}
-        >
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h3 className="font-semibold">Technical</h3>
-              <p className="text-sm text-muted-foreground">
-                From Google, Meta, and Apple
-              </p>
-            </div>
-            <Badge variant="secondary">Medium</Badge>
-          </div>
-        </Card>
+          </Card>
+        ))}
       </div>
       <div className="flex items-center justify-between pt-4">
         <Button variant="outline" onClick={onBack}>
@@ -86,3 +69,18 @@ export default function InterviewType({
     </div>
   );
 }
+
+const interviewTypes = [
+  {
+    type: "behavioral",
+    title: "Behavioral",
+    description: "From LinkedIn, Amazon, Adobe",
+    difficulty: "Easy",
+  },
+  {
+    type: "technical",
+    title: "Technical",
+    description: "From Google, Meta, and Apple",
+    difficulty: "Medium",
+  },
+];

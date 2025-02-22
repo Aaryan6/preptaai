@@ -32,3 +32,25 @@ export async function getInterview(id: string) {
 
   return data as Interview;
 }
+
+export async function updateInterview(
+  id: string,
+  userId: string,
+  status: { status: "completed" | "in-progress" }
+) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("interviews")
+    .update(status)
+    .eq("id", id)
+    .eq("user_id", userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+
+  return data as Interview;
+}

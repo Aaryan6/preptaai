@@ -9,7 +9,7 @@ export type Interview = {
   resume_text?: string;
   started_at?: string;
   completed_at?: string;
-  status?: string;
+  status?: "pending" | "completed" | "in-progress";
   created_at?: string;
 };
 
@@ -21,5 +21,23 @@ export type ChatMessages = {
   content: string;
   role: string;
   audio_url?: string;
+  created_at?: string;
+};
+
+export type InterviewResult = {
+  id: string;
+  interview_id: string;
+  metrics: {
+    technical_accuracy: number;
+    communication: number;
+    pacing: number;
+    keyword_usage: number;
+    overall_score: number;
+  };
+  feedback: {
+    strengths: string[];
+    weaknesses: string[];
+    improvements: string[];
+  };
   created_at?: string;
 };

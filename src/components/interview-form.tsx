@@ -82,7 +82,7 @@ export default function InterviewForm() {
   };
 
   return (
-    <div className="grid lg:grid-cols-[1fr,400px] h-screen">
+    <div className="grid lg:grid-cols-[1fr,400px] h-screen bg-muted">
       <main className="flex flex-col items-center justify-center p-6 lg:p-12">
         {step === "type" ? (
           <InterviewType

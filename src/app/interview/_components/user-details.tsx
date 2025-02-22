@@ -62,7 +62,7 @@ export default function UserDetails({
         Only name and job role are required.
       </p>
       <div className="space-y-4">
-        <Card className="p-4">
+        <Card className="p-4 bg-background/70">
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name *</Label>

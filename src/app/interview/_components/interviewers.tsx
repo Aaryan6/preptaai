@@ -67,7 +67,7 @@ export default function Interviewers({
         {interviewers.map((interviewer) => (
           <Card
             key={interviewer.id}
-            className={`relative overflow-hidden p-4 transition-colors hover:bg-accent cursor-pointer ${
+            className={`relative bg-violet-50 overflow-hidden p-4 transition-colors hover:bg-violet-200 cursor-pointer ${
               selectedInterviewer === interviewer.id
                 ? "border-2 border-primary"
                 : ""
@@ -78,10 +78,8 @@ export default function Interviewers({
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="font-semibold">{interviewer.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {interviewer.role}
-                </p>
+                <h3 className="font-semibold text-black">{interviewer.name}</h3>
+                <p className="text-sm text-zinc-600">{interviewer.role}</p>
               </div>
               <Badge variant="secondary">{interviewer.language}</Badge>
             </div>

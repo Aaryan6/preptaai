@@ -13,10 +13,10 @@ export function AppPreview() {
               <div className="w-6 h-6 rounded-lg bg-purple-600 flex items-center justify-center">
                 <div className="w-3 h-3 border-2 border-white rounded-sm" />
               </div>
-              <span className="font-semibold">NotaAI</span>
+              <span className="font-semibold text-black">NotaAI</span>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
+              <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-black rounded-lg">
                 <svg
                   className="w-5 h-5"
                   fill="none"

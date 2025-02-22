@@ -1,5 +1,5 @@
 import { getInterview } from "@/actions/interview";
-import InterviewLayout from "@/components/interview-layout";
+import InterviewLayout from "@/app/interview/_components/interview-layout";
 
 type Props = Promise<{
   id: string;
@@ -11,7 +11,6 @@ export default async function InterviewPage({ params }: { params: Props }) {
   return (
     <div className="whitespace-pre-wrap">
       <InterviewLayout interview={interview} />
-      <pre>{JSON.stringify(interview, null, 2)}</pre>
     </div>
   );
 }

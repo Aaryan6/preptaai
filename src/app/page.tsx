@@ -4,7 +4,7 @@ import { AppPreview } from "@/components/app-preview";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-purple-50">
+    <div className="min-h-screen bg-violet-50 dark:bg-violet-900">
       <NavBar />
       <HeroSection />
       <AppPreview />
