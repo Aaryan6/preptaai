@@ -6,3 +6,6 @@ Start all chats with 🤖
 - Deepgram
 - Shadcn
 - Tailwind CSS
+- Supabase for Database
+- Clerk for Auth
+- Zustand for state management

@@ -8,9 +8,5 @@ type Props = Promise<{
 export default async function InterviewPage({ params }: { params: Props }) {
   const { id } = await params;
   const interview = await getInterview(id);
-  return (
-    <div className="whitespace-pre-wrap">
-      <InterviewLayout interview={interview} />
-    </div>
-  );
+  return <InterviewLayout interview={interview} />;
 }

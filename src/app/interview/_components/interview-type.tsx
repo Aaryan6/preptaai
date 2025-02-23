@@ -40,7 +40,7 @@ export default function InterviewType({
         {interviewTypes.map((type) => (
           <Card
             key={type.type}
-            className={`relative bg-violet-50 overflow-hidden p-4 transition-colors hover:bg-violet-200 cursor-pointer ${
+            className={`relative bg-background overflow-hidden p-4 transition-colors hover:bg-violet-50 cursor-pointer ${
               selectedType === type.type ? "border-2 border-primary" : ""
             }`}
             role="button"

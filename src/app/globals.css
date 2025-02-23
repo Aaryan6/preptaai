@@ -71,3 +71,17 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+html,
+body,
+:root {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+}

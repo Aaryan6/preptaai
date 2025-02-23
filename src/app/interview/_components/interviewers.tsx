@@ -67,7 +67,7 @@ export default function Interviewers({
         {interviewers.map((interviewer) => (
           <Card
             key={interviewer.id}
-            className={`relative bg-violet-50 overflow-hidden p-4 transition-colors hover:bg-violet-200 cursor-pointer ${
+            className={`relative bg-background overflow-hidden p-4 transition-colors hover:bg-violet-50 cursor-pointer ${
               selectedInterviewer === interviewer.id
                 ? "border-2 border-primary"
                 : ""

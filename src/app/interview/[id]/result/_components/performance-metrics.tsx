@@ -1,14 +1,5 @@
+import { Brain, Clock, Code2, MessageSquare } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Brain, MessageSquare, Clock, Code2 } from "lucide-react";
-import { LucideIcon } from "lucide-react";
-
-interface Metric {
-  label: string;
-  value: number;
-  icon: LucideIcon;
-  color: string;
-}
 
 interface PerformanceMetricsProps {
   metrics: {
@@ -19,57 +10,71 @@ interface PerformanceMetricsProps {
   };
 }
 
+interface Metric {
+  label: string;
+  value: number;
+  icon: any;
+  iconBg: string;
+  iconColor: string;
+}
+
 export function PerformanceMetrics({ metrics }: PerformanceMetricsProps) {
   const metricsData: Metric[] = [
     {
       label: "Technical Accuracy",
       value: metrics.technical_accuracy,
       icon: Brain,
-      color: "purple",
+      iconBg: "bg-[#F3E8FF] dark:bg-purple-900/20",
+      iconColor: "text-purple-600 dark:text-purple-400",
     },
     {
       label: "Communication",
       value: metrics.communication,
       icon: MessageSquare,
-      color: "blue",
+      iconBg: "bg-[#E1EFFE] dark:bg-blue-900/20",
+      iconColor: "text-blue-600 dark:text-blue-400",
     },
     {
       label: "Pacing",
       value: metrics.pacing,
       icon: Clock,
-      color: "green",
+      iconBg: "bg-[#DCFCE7] dark:bg-green-900/20",
+      iconColor: "text-green-600 dark:text-green-400",
     },
     {
       label: "Keyword Usage",
       value: metrics.keyword_usage,
       icon: Code2,
-      color: "teal",
+      iconBg: "bg-[#CCFBF1] dark:bg-teal-900/20",
+      iconColor: "text-teal-600 dark:text-teal-400",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid gap-6 md:grid-cols-2">
       {metricsData.map((metric) => (
         <Card
           key={metric.label}
-          className="group hover:shadow-lg transition-all duration-200 border-0 bg-gray-800/50 hover:bg-gray-800 backdrop-blur-sm"
+          className="group transition-all duration-200 border-0 bg-white dark:bg-gray-800/50 hover:shadow-lg dark:hover:bg-gray-800/80"
         >
           <CardContent className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div
-                className={`p-3 rounded-2xl bg-${metric.color}-500/20 text-${metric.color}-400 group-hover:scale-110 transition-transform`}
-              >
-                <metric.icon className="h-6 w-6" />
+            <div className="flex items-start justify-between mb-6">
+              <div className={`p-3 rounded-xl ${metric.iconBg}`}>
+                <metric.icon className={`h-6 w-6 ${metric.iconColor}`} />
               </div>
-              <span className="text-2xl font-bold text-white">
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">
                 {metric.value}%
               </span>
             </div>
-            <h3 className="font-medium text-gray-300 mb-3">{metric.label}</h3>
-            <Progress
-              value={metric.value}
-              className={`h-1.5 bg-gray-700 [--progress-background:theme(colors.${metric.color}.500)]`}
-            />
+            <h3 className="font-medium text-gray-600 dark:text-gray-300 mb-4">
+              {metric.label}
+            </h3>
+            <div className="relative h-2 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="absolute top-0 left-0 h-full bg-gray-900 dark:bg-white transition-all duration-500 ease-out rounded-full"
+                style={{ width: `${metric.value}%` }}
+              />
+            </div>
           </CardContent>
         </Card>
       ))}

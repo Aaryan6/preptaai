@@ -61,14 +61,12 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex flex-1 h-full bg-background">
       <ConversationSidebar conversation={conversation} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full">
-        <div className="flex-1 min-h-0">
-          <VideoComponent />
-        </div>
+        <VideoComponent />
         <ControlPanel
           addToConversation={addToConversation}
           conversation={conversation}

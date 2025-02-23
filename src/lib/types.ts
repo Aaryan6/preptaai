@@ -41,3 +41,29 @@ export type InterviewResult = {
   };
   created_at?: string;
 };
+
+export type ResumeAnalysis = {
+  id: string;
+  user_id: string;
+  file_name: string;
+  doc_type: "pdf" | "doc" | "docx" | "txt";
+  resume_text: string;
+  metrics: {
+    content_score: number;
+    format_score: number;
+    impact_score: number;
+    overall_score: number;
+  };
+  feedback: {
+    achievements: string[];
+    keywords: string[];
+    design_feedback: string[];
+    actionable_suggestions: string[];
+  };
+  categories: {
+    [key: string]: number;
+  };
+  created_at?: string;
+};
+
+export type CreateResumeAnalysis = Omit<ResumeAnalysis, "id">;

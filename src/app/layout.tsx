@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
+import { NavBar } from "@/components/navbar";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -29,7 +30,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <main className="flex flex-col h-screen">
+              <NavBar />
+              <div className="flex-1 h-[calc(100vh-4rem)]">{children}</div>
+            </main>
           </ThemeProvider>
         </body>
       </html>

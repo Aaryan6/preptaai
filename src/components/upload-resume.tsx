@@ -1,16 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { extractTextFromPDF } from "@/utils/pdf-extractor";
-import ResumeAnalysisResults from "./resume-analysis-results";
+import {
+  extractTextFromPDF,
+  extractTextFromDOCX,
+  extractTextFromDOC,
+} from "@/utils/file-extractors";
 import { Loader2 } from "lucide-react";
 import { toast, Toaster } from "sonner";
+import { useRouter } from "next/navigation";
+import { createResumeAnalysis } from "@/actions/resume";
+import { useUser } from "@clerk/nextjs";
 
 export default function UploadResume() {
+  const router = useRouter();
+  const { user } = useUser();
   const [jobRole, setJobRole] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [analysis, setAnalysis] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,8 +28,24 @@ export default function UploadResume() {
     setError(null);
 
     try {
-      const text = await extractTextFromPDF(file);
-      console.log("Extracted text:", text); // Debug log
+      let text: string;
+      const fileType = file.name.toLowerCase().split(".").pop();
+
+      switch (fileType) {
+        case "pdf":
+          text = await extractTextFromPDF(file);
+          break;
+        case "docx":
+          text = await extractTextFromDOCX(file);
+          break;
+        case "doc":
+          text = await extractTextFromDOC(file);
+          break;
+        default:
+          throw new Error(
+            "Unsupported file type. Please upload a PDF, DOC, or DOCX file."
+          );
+      }
 
       const response = await fetch("/api/resume-analytics", {
         method: "POST",
@@ -40,13 +63,34 @@ export default function UploadResume() {
       }
 
       const result = await response.json();
-      console.log("API Response:", result); // Debug log
 
       if (!result || !result.categories) {
         throw new Error("Invalid response format from API");
       }
 
-      setAnalysis(result);
+      // Store the analysis in the database
+      const storedAnalysis = await createResumeAnalysis({
+        user_id: user?.id || "", // This will be set by the server action
+        file_name: file.name,
+        doc_type: fileType as "pdf" | "doc" | "docx",
+        resume_text: text,
+        metrics: {
+          content_score: result.categories.content,
+          format_score: result.categories.design,
+          impact_score: result.categories.job_match,
+          overall_score: result.overall_score,
+        },
+        feedback: {
+          achievements: result.achievements_analysis.good,
+          keywords: result.keyword_matches.found,
+          design_feedback: result.design_feedback,
+          actionable_suggestions: result.suggestions,
+        },
+        categories: result.categories,
+      });
+
+      // Redirect to the analysis page
+      router.push(`/resume/${storedAnalysis.id}`);
     } catch (error) {
       console.error("Error analyzing resume:", error);
       setError(
@@ -74,10 +118,6 @@ export default function UploadResume() {
         </div>
       </div>
     );
-  }
-
-  if (analysis) {
-    return <ResumeAnalysisResults analysis={analysis} />;
   }
 
   return (

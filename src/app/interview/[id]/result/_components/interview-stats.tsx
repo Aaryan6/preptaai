@@ -10,25 +10,29 @@ export function InterviewStats({
   completedAt,
 }: InterviewStatsProps) {
   return (
-    <Card className="border-0 bg-gray-800/50 backdrop-blur-sm">
+    <Card className="border-0 bg-white dark:bg-gray-800/50">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold text-white">
+        <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
           Interview Stats
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-4 bg-purple-500/10 rounded-lg hover:bg-purple-500/20 transition-colors">
-            <div className="text-2xl font-bold text-purple-400">
+          <div className="text-center p-4 bg-purple-50 dark:bg-purple-500/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-500/30 transition-colors">
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {overallScore}%
             </div>
-            <div className="text-sm text-gray-400">Overall Score</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Overall Score
+            </div>
           </div>
-          <div className="text-center p-4 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors">
-            <div className="text-2xl font-bold text-blue-400">
+          <div className="text-center p-4 bg-blue-50 dark:bg-blue-500/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-500/30 transition-colors">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {completedAt ? new Date(completedAt).toLocaleDateString() : "N/A"}
             </div>
-            <div className="text-sm text-gray-400">Completion Date</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Completion Date
+            </div>
           </div>
         </div>
       </CardContent>
