@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { GridPattern } from "./ui/grid-pattern";
+import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="py-12 md:py-20 px-4 md:px-6">
+    <section className="py-12 md:py-20 px-4 md:px-6 relative">
       <div className="max-w-4xl mx-auto text-center">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
           Ace your interviews and land your dream job
@@ -14,13 +17,10 @@ export function HeroSection() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/interview">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-              Get Started
+            <Button className="" variant="big">
+              Get Started - it&apos;s free <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
-          <Button size="lg" variant="outline">
-            Get a Demo
-          </Button>
         </div>
       </div>
     </section>

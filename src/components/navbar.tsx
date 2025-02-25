@@ -28,13 +28,14 @@ export function NavBar() {
   return (
     <nav
       className={cn(
-        "flex items-center justify-between px-4 md:px-6 h-16 border-b border-border",
-        isHome && "dark:bg-violet-900 dark:border-violet-800"
+        "flex items-center justify-between px-4 md:px-6 h-16 border-b border-border z-50",
+        isHome &&
+          "max-w-7xl mx-auto w-full absolute bg-white rounded-xl top-6 left-1/2 -translate-x-1/2"
       )}
     >
       <div className="flex items-center gap-8">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45" />
           </div>
           <span className="font-semibold text-xl">PreptaAI</span>
