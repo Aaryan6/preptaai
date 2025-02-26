@@ -13,7 +13,7 @@ export function OverallScore({ score, previousScore }: OverallScoreProps) {
 
   return (
     <Card className="relative overflow-hidden border-0 bg-white dark:bg-gray-800/50">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent dark:from-purple-500/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent dark:from-sky-500/10" />
       <CardContent className="p-8">
         <div className="flex items-center justify-between gap-8">
           <div>
@@ -31,7 +31,7 @@ export function OverallScore({ score, previousScore }: OverallScoreProps) {
               value={score}
               size={100}
               strokeWidth={8}
-              primaryColor="var(--primary-color, #8B5CF6)"
+              primaryColor="var(--primary-color, #0EA5E9)"
               secondaryColor="var(--secondary-color, #F3F4F6)"
             />
             <div className="space-y-1">

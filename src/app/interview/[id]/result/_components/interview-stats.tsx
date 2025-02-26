@@ -18,8 +18,8 @@ export function InterviewStats({
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-4 bg-purple-50 dark:bg-purple-500/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-500/30 transition-colors">
-            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+          <div className="text-center p-4 bg-sky-50 dark:bg-sky-500/20 rounded-lg hover:bg-sky-100 dark:hover:bg-sky-500/30 transition-colors">
+            <div className="text-2xl font-bold text-sky-600 dark:text-sky-400">
               {overallScore}%
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">

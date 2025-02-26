@@ -113,6 +113,13 @@ Ensure all scores are integers between 0 and 100, and each feedback array contai
       .select()
       .single();
 
+    await supabase
+      .from("interviews")
+      .update({
+        status: "completed",
+      })
+      .eq("id", interviewId);
+
     if (error) {
       console.error("Error saving interview result:", error);
       return NextResponse.json(

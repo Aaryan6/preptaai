@@ -25,8 +25,8 @@ export default function VideoComponent() {
   }, [stream]);
 
   return (
-    <Card className="h-full rounded-none p-4 border-none">
-      <CardContent className="p-0 h-full rounded-md overflow-hidden flex">
+    <Card className="rounded-none border-none flex-1 flex flex-col h-full">
+      <CardContent className="p-0 w-full h-full overflow-hidden flex">
         {isVideoOn ? (
           <video
             ref={videoRef}

@@ -82,7 +82,7 @@ export default function InterviewForm() {
   };
 
   return (
-    <div className="grid lg:grid-cols-[1fr,400px] h-screen bg-muted">
+    <div className="grid lg:grid-cols-[1fr,400px] bg-muted h-full">
       <main className="flex flex-col items-center justify-center p-6 lg:p-12">
         {step === "type" ? (
           <InterviewType
@@ -105,7 +105,7 @@ export default function InterviewForm() {
         )}
       </main>
       <aside className="hidden lg:block border-l">
-        <div className="sticky top-0 h-screen">
+        <div className="sticky top-0 h-full">
           <Image
             src="/images/interview-photo.jpeg"
             alt="Interview Vault Icon"

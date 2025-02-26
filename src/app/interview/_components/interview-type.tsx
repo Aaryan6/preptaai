@@ -3,7 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 type InterviewType = "behavioral" | "technical" | null;
@@ -40,7 +41,7 @@ export default function InterviewType({
         {interviewTypes.map((type) => (
           <Card
             key={type.type}
-            className={`relative bg-background overflow-hidden p-4 transition-colors hover:bg-violet-50 cursor-pointer ${
+            className={`group relative bg-background overflow-hidden p-4 transition-colors border-2 hover:border-primary cursor-pointer ${
               selectedType === type.type ? "border-2 border-primary" : ""
             }`}
             role="button"
@@ -49,8 +50,26 @@ export default function InterviewType({
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="font-semibold text-black">{type.title}</h3>
-                <p className="text-sm text-zinc-600">{type.description}</p>
+                <h3
+                  className={cn(
+                    "font-semibold group-hover:text-primary transition-colors",
+                    selectedType === type.type
+                      ? "text-primary"
+                      : "text-foreground"
+                  )}
+                >
+                  {type.title}
+                </h3>
+                <p
+                  className={cn(
+                    "text-sm text-muted-foreground group-hover:text-primary transition-colors",
+                    selectedType === type.type
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {type.description}
+                </p>
               </div>
               <Badge variant="secondary">{type.difficulty}</Badge>
             </div>
@@ -58,7 +77,12 @@ export default function InterviewType({
         ))}
       </div>
       <div className="flex items-center justify-between pt-4">
-        <Button variant="outline" onClick={onBack}>
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
           Back to home
         </Button>
         <Button disabled={!selectedType} onClick={handleContinue}>

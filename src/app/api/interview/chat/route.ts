@@ -3,6 +3,7 @@ import { createClient } from "@deepgram/sdk";
 import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import { Message } from "ai";
+import { interviewers } from "@/lib/interviews";
 
 const deepgram = createClient(process.env.DEEPGRAM_API_KEY!);
 
@@ -46,16 +47,10 @@ export async function POST(req: Request) {
 
     // Get interviewer name based on voiceId
     const getInterviewerName = (id: string) => {
-      switch (id) {
-        case "aura-orpheus-en":
-          return "Orpheus";
-        case "aura-orion-en":
-          return "Orion";
-        case "aura-luna-en":
-          return "Luna";
-        default:
-          return "Orpheus";
-      }
+      const interviewer = interviewers.find(
+        (interviewer) => interviewer.id === id
+      );
+      return interviewer?.name || "Interviewer";
     };
 
     const interviewerName = getInterviewerName(voiceId);
@@ -63,22 +58,22 @@ export async function POST(req: Request) {
     // 2. Get AI response using the chat route logic with context
     const { text: aiText } = await generateText({
       messages: updatedMessages,
-      model: openai("gpt-4"),
+      model: openai("gpt-4o-mini"),
       system: `
-      You are a professional interviewer named ${interviewerName} conducting a ${type} interview.
-      You are specializing in ${jobRole} roles with expertise in ${skills}.
-      Your goal is to assess candidates for a ${jobRole} position, specifically looking for ${experience} years of experience.
+      You are ${interviewerName}, a professional interviewer conducting a ${type} interview for a ${jobRole} position.
+      You are an expert in ${skills} and evaluating candidates with around ${experience} years of experience.
       
-      Interview Style:
-      - Use a friendly but formal tone
-      - Ask one focused question at a time
-      - Ask relevant follow-up questions based on candidate responses
-      - Adapt your questions based on the candidate's experience level (${experience} years)
-      - If a candidate struggles, provide one helpful hint before moving on
-      - Keep your responses concise and focused
+      Approach:
+      - Be concise and direct in your responses as real interviewers are
+      - Always introduce yourself by name at the beginning
+      - Maintain a slightly strict, professional demeanor
+      - Ask focused, challenging questions that truly test the candidate's expertise
+      - Provide natural follow-up questions based on responses
+      - Keep your responses conversational and human-like
+      - Avoid using bullet points, markdown, or other formatting
+      - If a candidate struggles, be firm but fair - offer minimal guidance only when necessary
       
-      Start with a brief professional greeting introducing yourself as ${interviewerName}, then proceed with your first question.
-      Focus your questions on real-world scenarios and problems related to ${jobRole} and ${skills}.`,
+      Your goal is to thoroughly evaluate if this candidate has the skills and experience necessary for the ${jobRole} position. Focus on practical scenarios they would face in this role.`,
     });
 
     // 3. Convert AI response to speech using Kokoro

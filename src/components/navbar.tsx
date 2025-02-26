@@ -1,19 +1,35 @@
 "use client";
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const menuItems = [
   {
-    title: "Interview",
+    title: "Mock Interview",
     href: "/interview",
   },
   {
-    title: "Resume",
+    title: "Resume Analyzer",
     href: "/resume",
   },
   {
@@ -24,7 +40,16 @@ const menuItems = [
 
 export function NavBar() {
   const pathname = usePathname();
+  const { user } = useUser();
   const isHome = pathname === "/";
+
+  const shouldBeHidden =
+    pathname.startsWith("/interview") && !pathname.includes("/result");
+
+  if (shouldBeHidden) {
+    return null;
+  }
+
   return (
     <nav
       className={cn(
@@ -47,8 +72,8 @@ export function NavBar() {
             key={item.href}
             href={item.href}
             className={cn(
-              "text-sm font-medium transition-colors hover:text-violet-100 hover:bg-violet-950 px-4 py-2 rounded-full",
-              pathname === item.href ? "text-violet-50" : "text-foreground"
+              "text-sm font-medium transition-colors hover:text-primary",
+              pathname === item.href ? "text-primary" : "text-foreground"
             )}
           >
             {item.title}
@@ -56,16 +81,32 @@ export function NavBar() {
         ))}
       </div>
       <div className="flex items-center gap-4">
-        <ThemeToggle />
+        <SignedIn>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar>
+                <AvatarImage src={user?.imageUrl} />
+                <AvatarFallback>{user?.fullName?.charAt(0)}</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mr-2">
+              <DropdownMenuItem className="flex items-center gap-2 justify-between cursor-pointer">
+                Theme <ThemeToggle />
+              </DropdownMenuItem>
+              <Link href="/dashboard">
+                <DropdownMenuItem className="flex items-center gap-2 py-3 justify-between cursor-pointer">
+                  Dashboard
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem className="flex items-center gap-2 py-3 justify-between cursor-pointer">
+                <SignOutButton />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SignedIn>
         <SignedOut>
           <SignInButton />
         </SignedOut>
-        <SignedIn>
-          <Link href="/dashboard">
-            <Button variant="default">Dashboard</Button>
-          </Link>
-          <UserButton />
-        </SignedIn>
       </div>
     </nav>
   );

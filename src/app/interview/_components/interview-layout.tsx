@@ -1,13 +1,12 @@
 "use client";
 
+import { getMessages, storeMessage } from "@/actions/messages";
+import { Interview } from "@/lib/types";
 import { Message } from "ai";
 import { useEffect, useState } from "react";
-import AudioControls from "./audio-controls";
-import ConversationSidebar from "../../../components/sidebar";
 import VideoComponent from "../../../components/video-component";
-import { Interview } from "@/lib/types";
-import { getMessages, storeMessage } from "@/actions/messages";
 import ControlPanel from "./control-panel";
+import ConversationSidebar from "./sidebar/conversation";
 
 type InterviewLayoutProps = {
   interview: Interview;
@@ -16,7 +15,6 @@ type InterviewLayoutProps = {
 export default function InterviewLayout({ interview }: InterviewLayoutProps) {
   const [conversation, setConversation] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -29,10 +27,8 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
             role: msg.role as "user" | "assistant",
           }))
         );
-        setError(null);
       } catch (error) {
         console.error("Error loading messages:", error);
-        setError("Failed to load messages");
       } finally {
         setIsLoading(false);
       }
@@ -45,10 +41,8 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
     try {
       await storeMessage(message, interview.id);
       setConversation((prev) => [...prev, message]);
-      setError(null);
     } catch (error) {
       console.error("Error storing message:", error);
-      setError("Failed to store message");
     }
   };
 
@@ -65,7 +59,7 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
       <ConversationSidebar conversation={conversation} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col h-full">
+      <div className="flex-1 flex flex-col h-full relative">
         <VideoComponent />
         <ControlPanel
           addToConversation={addToConversation}

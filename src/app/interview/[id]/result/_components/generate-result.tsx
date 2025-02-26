@@ -1,8 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function GenerateResult({
   interviewId,
@@ -41,11 +42,16 @@ export default function GenerateResult({
 
   return (
     <Button
-      className="w-full"
+      className="w-full max-w-sm mx-auto"
       onClick={handleGenerateResult}
       disabled={isGenerating}
+      variant="big"
     >
-      {isGenerating ? "Generating Results..." : "Generate Results"}
+      {isGenerating ? (
+        <Loader className="w-4 h-4 animate-spin" />
+      ) : (
+        "Generate Results"
+      )}
     </Button>
   );
 }

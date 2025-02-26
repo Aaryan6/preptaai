@@ -12,7 +12,7 @@ export default async function DashboardPage() {
   const interviews = await getInterviews(userId);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full bg-muted">
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
           <div className="mb-8 space-y-4">

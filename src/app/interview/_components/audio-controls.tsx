@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Square } from "lucide-react";
-import { generateId, Message } from "ai";
+import AudioVisualizer from "@/components/user-voice-visualizer";
 import { Interview } from "@/lib/types";
+import { generateId, Message } from "ai";
+import { Mic, Square } from "lucide-react";
+import { useRef, useState } from "react";
 
 interface AudioControlsProps {
   addToConversation: (message: Message) => Promise<void>;
@@ -16,10 +17,7 @@ export default function AudioControls({
   addToConversation,
   conversation,
   interview,
-  onMediaStreamChange,
-}: AudioControlsProps & {
-  onMediaStreamChange?: (stream: MediaStream | null) => void;
-}) {
+}: AudioControlsProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
@@ -36,7 +34,6 @@ export default function AudioControls({
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       setMediaStream(null);
-      onMediaStreamChange?.(null);
     }
   };
 
@@ -46,7 +43,6 @@ export default function AudioControls({
         audio: true,
       });
       setMediaStream(mediaStream);
-      onMediaStreamChange?.(mediaStream);
       const mediaRecorder = new MediaRecorder(mediaStream);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
@@ -80,12 +76,12 @@ export default function AudioControls({
 
       // Add interview settings with fallback values for optional fields
       formData.append("jobRole", interview.job_role);
-      formData.append("skills", interview.skills || "general technical skills");
-      formData.append("experience", interview.experience || "3");
+      formData.append("skills", interview.skills || "");
+      formData.append("experience", interview.experience || "");
       formData.append("type", interview.type || "technical");
       formData.append("voiceId", interview.voice_id || "aura-orpheus-en");
 
-      const response = await fetch("/api/voice-to-voice", {
+      const response = await fetch("/api/interview/chat", {
         method: "POST",
         body: formData,
       });
@@ -155,42 +151,39 @@ export default function AudioControls({
   };
 
   return (
-    <div className="flex justify-center">
-      <audio ref={audioRef} className="hidden" />
-      <Button
-        onClick={toggleRecording}
-        disabled={isProcessing}
-        variant="ghost"
-        size="lg"
-        className={`
-          relative w-16 h-16 rounded-full p-0 
-          transition-all duration-200 ease-in-out
-          hover:bg-slate-100 dark:hover:bg-slate-800
-          ${isRecording ? "bg-red-500/10" : "bg-slate-50 dark:bg-slate-900"}
-          ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
-        `}
-      >
-        <div
+    <div className="p-2">
+      <div className="flex justify-center items-center bg-muted rounded-lg px-4 p-1 gap-2">
+        <audio ref={audioRef} className="hidden" />
+        <Button
+          onClick={toggleRecording}
+          disabled={isProcessing}
+          variant="ghost"
+          size="lg"
           className={`
-          absolute inset-0 rounded-full
-          ${isRecording ? "animate-ping bg-red-500/30" : ""}
-        `}
-        />
-        {isRecording ? (
-          <Square className="w-5 h-5 text-red-500 relative z-10" />
-        ) : (
-          <Mic
-            className={`
-            w-5 h-5 relative z-10
-            ${
-              isProcessing
-                ? "text-slate-400"
-                : "text-slate-700 dark:text-slate-300"
-            }
+          group relative size-12 rounded-full p-0 
+          transition-all duration-200 ease-in-out
+          hover:bg-foreground/70 hover:text-white border-2
+          ${
+            isRecording
+              ? "bg-foreground/80 text-white"
+              : "bg-background dark:bg-slate-900"
+          }
+            ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
+            `}
+        >
+          {isRecording ? (
+            <Square className="w-5 h-5 relative z-10" />
+          ) : (
+            <Mic
+              className={`
+            w-5 h-5 relative z-10 group-hover:text-white
+            ${isProcessing ? "text-slate-400" : ""}
           `}
-          />
-        )}
-      </Button>
+            />
+          )}
+        </Button>
+        <AudioVisualizer stream={mediaStream} />
+      </div>
     </div>
   );
 }

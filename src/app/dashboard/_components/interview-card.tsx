@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface InterviewCardProps {
   title: string;
@@ -31,6 +32,7 @@ export function InterviewCard({
       border: "border-blue-200 dark:border-blue-900",
       hover: "hover:border-blue-300 dark:hover:border-blue-800",
       badge: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100",
+      button: "bg-blue-500 text-white",
     },
     behavioral: {
       background:
@@ -39,6 +41,7 @@ export function InterviewCard({
       hover: "hover:border-purple-300 dark:hover:border-purple-800",
       badge:
         "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-100",
+      button: "bg-purple-500/70 text-white",
     },
   };
 
@@ -76,24 +79,33 @@ export function InterviewCard({
               <span>{duration}</span>
             </div>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-end justify-between">
             <Badge
               variant="outline"
               className={`capitalize border-0 ${styles.badge}`}
             >
               {type}
             </Badge>
-            <motion.div whileHover={{ x: 5 }} className="text-muted-foreground">
-              <ArrowRight className="h-5 w-5" />
-            </motion.div>
+            <Link
+              href={
+                status === "completed"
+                  ? `/interview/${id}/result`
+                  : `/interview/${id}`
+              }
+              className=""
+              aria-label={`View details for ${title}`}
+            >
+              <motion.div
+                whileHover={{ x: 5 }}
+                className={cn(
+                  "text-muted-foreground bg-background p-4 rounded-full",
+                  styles.button
+                )}
+              >
+                <ArrowRight className="h-5 w-5" />
+              </motion.div>
+            </Link>
           </div>
-          <Link
-            href={`/interview/${id}`}
-            className="absolute inset-0 z-10"
-            aria-label={`View details for ${title}`}
-          >
-            <span className="sr-only">View details</span>
-          </Link>
         </CardContent>
       </Card>
     </motion.div>

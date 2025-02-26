@@ -24,8 +24,8 @@ export function PerformanceMetrics({ metrics }: PerformanceMetricsProps) {
       label: "Technical Accuracy",
       value: metrics.technical_accuracy,
       icon: Brain,
-      iconBg: "bg-[#F3E8FF] dark:bg-purple-900/20",
-      iconColor: "text-purple-600 dark:text-purple-400",
+      iconBg: "bg-[#E1EFFE] dark:bg-sky-900/20",
+      iconColor: "text-sky-600 dark:text-sky-400",
     },
     {
       label: "Communication",

@@ -10,7 +10,7 @@ export function DesignFeedback({ feedback }: DesignFeedbackProps) {
     <Card className="border-0 bg-white dark:bg-gray-800/50">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <Paintbrush className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          <Paintbrush className="h-5 w-5 text-sky-600 dark:text-sky-400" />
           <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
             Design Feedback
           </CardTitle>

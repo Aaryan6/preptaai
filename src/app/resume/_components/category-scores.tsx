@@ -29,7 +29,7 @@ export function CategoryScores({ categories }: CategoryScoresProps) {
             key={category.name}
             className="group relative overflow-hidden border-0 bg-white dark:bg-gray-800/50 hover:shadow-lg transition-all duration-300"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent dark:from-purple-500/10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent dark:from-sky-500/10" />
             <CardContent className="p-6">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
@@ -49,7 +49,7 @@ export function CategoryScores({ categories }: CategoryScoresProps) {
                       value={category.score}
                       size={60}
                       strokeWidth={6}
-                      primaryColor="var(--primary-color, #8B5CF6)"
+                      primaryColor="var(--primary-color, #0EA5E9)"
                       secondaryColor="var(--secondary-color, #F3F4F6)"
                     />
                     <div className="space-y-1">

@@ -3,43 +3,16 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { interviewers } from "@/lib/interviews";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
-
-type Interviewer = {
-  id: string;
-  name: string;
-  role: string;
-  language: "EN";
-};
 
 interface InterviewersProps {
   onSelect: (interviewerId: string) => void;
   onBack: () => void;
   selectedInterviewer: string | null;
 }
-
-const interviewers: Interviewer[] = [
-  {
-    id: "aura-orpheus-en",
-    name: "Orpheus",
-    role: "Software Engineering",
-    language: "EN",
-  },
-
-  {
-    id: "aura-orion-en",
-    name: "Orion",
-    role: "Product Management",
-    language: "EN",
-  },
-  {
-    id: "aura-luna-en",
-    name: "Luna",
-    role: "Other",
-    language: "EN",
-  },
-];
 
 export default function Interviewers({
   onSelect,
@@ -67,7 +40,7 @@ export default function Interviewers({
         {interviewers.map((interviewer) => (
           <Card
             key={interviewer.id}
-            className={`relative bg-background overflow-hidden p-4 transition-colors hover:bg-violet-50 cursor-pointer ${
+            className={`group relative bg-background overflow-hidden p-4 transition-colors border-2 hover:border-primary cursor-pointer ${
               selectedInterviewer === interviewer.id
                 ? "border-2 border-primary"
                 : ""
@@ -78,8 +51,26 @@ export default function Interviewers({
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="font-semibold text-black">{interviewer.name}</h3>
-                <p className="text-sm text-zinc-600">{interviewer.role}</p>
+                <h3
+                  className={cn(
+                    "font-semibold group-hover:text-primary",
+                    selectedInterviewer === interviewer.id
+                      ? "text-primary"
+                      : "text-foreground"
+                  )}
+                >
+                  {interviewer.name}
+                </h3>
+                <p
+                  className={cn(
+                    "text-sm text-muted-foreground group-hover:text-primary",
+                    selectedInterviewer === interviewer.id
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {interviewer.role}
+                </p>
               </div>
               <Badge variant="secondary">{interviewer.language}</Badge>
             </div>
@@ -87,8 +78,13 @@ export default function Interviewers({
         ))}
       </div>
       <div className="flex items-center justify-between pt-4">
-        <Button variant="outline" onClick={onBack}>
-          Previous step
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
         </Button>
         <Button disabled={!selectedInterviewer} onClick={handleContinue}>
           Continue

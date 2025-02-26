@@ -9,6 +9,11 @@ import {
   PerformanceMetrics,
 } from "./_components";
 import GenerateResult from "./_components/generate-result";
+import Image from "next/image";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { ArrowLeft } from "lucide-react";
 
 async function getInterviewResult(
   interviewId: string
@@ -43,10 +48,17 @@ export default async function InterviewResultPage({
 
   if (!result) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="max-w-md w-full p-6 bg-card rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-center mb-6">
-            Interview Results Not Generated
+      <div className="h-full bg-muted flex items-center justify-center">
+        <div className="max-w-lg w-full p-6 md:p-12 bg-card rounded-2xl shadow-lg flex flex-col items-center">
+          <Image
+            src="/result.svg"
+            alt="Interview Result"
+            width={300}
+            height={200}
+            className="mx-auto"
+          />
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
+            Generated Your Result
           </h2>
           <p className="text-muted-foreground text-center mb-6">
             The results for this interview haven&apos;t been generated yet.
@@ -59,8 +71,18 @@ export default async function InterviewResultPage({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full bg-muted overflow-y-auto">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <Link
+          href={"/dashboard"}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "text-sm bg-background hover:bg-background/80 text-foreground hover:text-foreground"
+          )}
+        >
+          <ArrowLeft className="size-2" />
+          Back to Dashboard
+        </Link>
         <div className="grid grid-cols-12 gap-6">
           {/* Main Content */}
           <div className="col-span-8 space-y-6">
@@ -76,7 +98,7 @@ export default async function InterviewResultPage({
             {/* Interview Stats */}
             <InterviewStats
               overallScore={result.metrics.overall_score}
-              completedAt={interview.completed_at}
+              completedAt={interview.created_at}
             />
 
             {/* Next Steps */}

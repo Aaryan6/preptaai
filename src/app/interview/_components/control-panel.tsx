@@ -1,13 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Interview } from "@/lib/types";
+import { Message } from "ai";
+import { LogIn } from "lucide-react";
+import { useRouter } from "next/navigation";
 import AudioControls from "./audio-controls";
 import VideoToggle from "./video-toggle";
-import { Message } from "ai";
-import { useState } from "react";
-import AudioVisualizer from "@/components/user-voice-visualizer";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 export default function ControlPanel({
   addToConversation,
@@ -19,31 +18,32 @@ export default function ControlPanel({
   interview: Interview;
 }) {
   const router = useRouter();
-  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
   const handleViewResults = () => {
     router.push(`/interview/${interview.id}/result`);
   };
 
   return (
-    <div className="flex flex-col p-4 border-t border-border bg-background">
-      <div className="flex items-center gap-8">
+    <div className="flex flex-col w-full absolute px-2 bottom-2 left-0 right-0">
+      <div className="flex items-center justify-between w-full gap-8 px-6 bg-background border-2 rounded-sm">
         {/* Left side - Controls */}
         <div className="flex items-center gap-4">
-          <AudioControls
-            addToConversation={addToConversation}
-            conversation={conversation}
-            interview={interview}
-            onMediaStreamChange={setMediaStream}
-          />
           <VideoToggle />
         </div>
+        <AudioControls
+          addToConversation={addToConversation}
+          conversation={conversation}
+          interview={interview}
+        />
 
         {/* Right side - Visualizer and Results Button */}
-        <div className="flex-1 flex items-center justify-between">
-          <AudioVisualizer stream={mediaStream} />
-          <Button variant="default" onClick={handleViewResults}>
-            View Results
+        <div className="flex items-center justify-between">
+          <Button
+            variant="big"
+            onClick={handleViewResults}
+            className="bg-transparent hover:bg-foreground/90 hover:text-background text-foreground/70 border-2 border-foreground/40"
+          >
+            Finish <LogIn className="w-4 h-4" />
           </Button>
         </div>
       </div>

@@ -18,7 +18,7 @@ export function NextSteps() {
     {
       icon: Calendar,
       text: "Schedule follow-up meeting",
-      color: "purple",
+      color: "sky",
     },
     {
       icon: Target,
