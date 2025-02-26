@@ -38,13 +38,16 @@ async function getInterviewResult(
   return data as InterviewResult;
 }
 
+type TParams = Promise<{ id: string }>;
+
 export default async function InterviewResultPage({
   params,
 }: {
-  params: { id: string };
+  params: TParams;
 }) {
-  const interview = await getInterview(params.id);
-  const result = await getInterviewResult(params.id);
+  const { id } = await params;
+  const interview = await getInterview(id);
+  const result = await getInterviewResult(id);
 
   if (!result) {
     return (
@@ -64,7 +67,7 @@ export default async function InterviewResultPage({
             The results for this interview haven&apos;t been generated yet.
             Click below to generate them.
           </p>
-          <GenerateResult interviewId={params.id} />
+          <GenerateResult interviewId={id} />
         </div>
       </div>
     );

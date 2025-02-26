@@ -9,14 +9,11 @@ import {
 } from "../_components";
 import { FileText } from "lucide-react";
 
-interface ResumePageProps {
-  params: {
-    id: string;
-  };
-}
+type TParams = Promise<{ id: string }>;
 
-export default async function ResumePage({ params }: ResumePageProps) {
-  const resumeAnalysis = await getResumeAnalysis(params.id);
+export default async function ResumePage({ params }: { params: TParams }) {
+  const { id } = await params;
+  const resumeAnalysis = await getResumeAnalysis(id);
 
   if (!resumeAnalysis) {
     return <div>Resume analysis not found</div>;
