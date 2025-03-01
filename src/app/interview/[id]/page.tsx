@@ -1,5 +1,5 @@
 import { getInterview } from "@/actions/interview";
-import InterviewLayout from "@/app/interview/_components/interview-layout";
+import InterviewLayout from "@/app/interview/[id]/_components/interview-layout";
 
 type Props = Promise<{
   id: string;

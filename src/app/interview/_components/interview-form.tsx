@@ -7,13 +7,14 @@ import Interviewers from "@/app/interview/_components/interviewers";
 import UserDetails from "@/app/interview/_components/user-details";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { createInterview } from "@/actions/interview";
+import { createInterview, Interviewer } from "@/actions/interview";
 import {
   extractTextFromPDF,
   extractTextFromDOCX,
   extractTextFromDOC,
 } from "@/utils/file-extractors";
 import { toast, Toaster } from "sonner";
+import { InterviewersInfo } from "@/lib/types";
 
 type UserDetailsType = {
   name: string;
@@ -30,7 +31,11 @@ type InterviewData = {
   userDetails?: UserDetailsType;
 };
 
-export default function InterviewForm() {
+interface InterviewFormProps {
+  interviewers: InterviewersInfo[];
+}
+
+export default function InterviewForm({ interviewers }: InterviewFormProps) {
   const { user } = useUser();
   const router = useRouter();
   const [step, setStep] = useState<"type" | "interviewer" | "userDetails">(
@@ -106,7 +111,7 @@ export default function InterviewForm() {
         experience: details.experience,
         skills: details.skills,
         type: interviewData.type as string,
-        voice_id: interviewData.interviewerId as string,
+        interviewer_id: interviewData.interviewerId as string,
         resume_text: resumeText || undefined,
       });
 
@@ -146,6 +151,7 @@ export default function InterviewForm() {
             onSelect={handleInterviewerSelect}
             onBack={handleBack}
             selectedInterviewer={interviewData.interviewerId}
+            interviewers={interviewers}
           />
         ) : (
           <UserDetails

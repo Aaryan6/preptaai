@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["playht", "@deepgram/sdk"],
+  serverExternalPackages: ["@deepgram/sdk"],
+  images: {
+    remotePatterns: [
+      {
+        hostname: "yhdoxqjernsufwguhtyd.supabase.co",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

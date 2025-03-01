@@ -22,7 +22,7 @@ export async function getInterview(id: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("interviews")
-    .select("*")
+    .select("*, interviewers_info(*)")
     .eq("id", id)
     .single();
   if (error) {
@@ -59,3 +59,11 @@ export async function updateInterview(
 
   return data as Interview;
 }
+
+export type Interviewer = {
+  id: string;
+  name: string;
+  behavior: string;
+  avatar?: string;
+  voice_url?: string;
+};

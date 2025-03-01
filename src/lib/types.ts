@@ -4,13 +4,14 @@ export type Interview = {
   job_role: string;
   skills?: string;
   experience?: string;
-  voice_id?: string;
+  interviewer_id?: string;
   type?: string;
   resume_text?: string;
   started_at?: string;
   completed_at?: string;
   status?: "pending" | "completed" | "in-progress";
   created_at?: string;
+  interviewers_info?: InterviewersInfo;
 };
 
 export type CreateInterview = Omit<Interview, "id">;
@@ -67,3 +68,17 @@ export type ResumeAnalysis = {
 };
 
 export type CreateResumeAnalysis = Omit<ResumeAnalysis, "id">;
+
+export type InterviewersInfo = {
+  id: string;
+  name: string;
+  avatar: string;
+  voice_id: string;
+  gender: string;
+  behavior?: string;
+  language: string;
+  voice_url: string;
+  created_at?: string;
+};
+
+export type CreateInterviewersInfo = Omit<InterviewersInfo, "id">;

@@ -1,42 +1,42 @@
 import { create } from "zustand";
-import { type StateCreator } from "zustand";
+import { RefObject } from "react";
 
-type VideoStore = {
+interface VideoState {
   isVideoOn: boolean;
-  videoRef: React.RefObject<HTMLVideoElement | null> | null;
   stream: MediaStream | null;
-  setStream: (stream: MediaStream | null) => void;
+  videoRef: RefObject<HTMLVideoElement> | null;
   toggleVideo: () => Promise<void>;
-};
+}
 
-export const useVideoStore = create<VideoStore>(
-  (set, get): VideoStore => ({
-    isVideoOn: false,
-    videoRef: null,
-    stream: null,
-    setStream: (stream: MediaStream | null) => set({ stream }),
-    toggleVideo: async () => {
-      const { isVideoOn, stream } = get();
+export const useVideoStore = create<VideoState>((set, get) => ({
+  isVideoOn: false,
+  stream: null,
+  videoRef: null,
+  toggleVideo: async () => {
+    const { isVideoOn, stream, videoRef } = get();
 
+    if (isVideoOn) {
       // Turn off video
-      if (isVideoOn) {
-        if (stream) {
-          stream.getTracks().forEach((track) => track.stop());
-        }
-        set({ isVideoOn: false, stream: null });
-        return;
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
       }
-
-      // Turn on video
+      set({ isVideoOn: false, stream: null });
+    } else {
       try {
+        // Turn on video
         const newStream = await navigator.mediaDevices.getUserMedia({
           video: true,
-          audio: false,
         });
+
         set({ isVideoOn: true, stream: newStream });
-      } catch (err) {
-        console.error("Error accessing the webcam", err);
+
+        // Set the stream to the video element
+        if (videoRef && videoRef.current) {
+          videoRef.current.srcObject = newStream;
+        }
+      } catch (error) {
+        console.error("Error accessing camera:", error);
       }
-    },
-  })
-);
+    }
+  },
+}));

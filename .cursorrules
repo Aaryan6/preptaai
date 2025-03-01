@@ -1,6 +1,7 @@
 Start all chats with 🤖
 
 ## Stack
+
 - NextJS
 - Vercel AI SDK
 - Deepgram
@@ -9,3 +10,7 @@ Start all chats with 🤖
 - Supabase for Database
 - Clerk for Auth
 - Zustand for state management
+
+## Rules
+
+- always use Image from next/image, Link from next/link instead of img and a html tag
