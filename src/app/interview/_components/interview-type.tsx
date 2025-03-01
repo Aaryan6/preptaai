@@ -34,8 +34,7 @@ export default function InterviewType({
         Select a question type
       </h1>
       <p className="text-muted-foreground">
-        We have hundreds of questions from top tech companies. Choose a type to
-        get started.
+        These are the types of interviews, Choose a type to get started.
       </p>
       <div className="space-y-4">
         {interviewTypes.map((type) => (

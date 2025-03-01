@@ -36,12 +36,17 @@ export async function getInterview(id: string) {
 export async function updateInterview(
   id: string,
   userId: string,
-  status: { status: "completed" | "in-progress" }
+  status: { status: "completed" | "in-progress"; completed_at?: string }
 ) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("interviews")
-    .update(status)
+    .update({
+      ...status,
+      ...(status.status === "completed"
+        ? { completed_at: new Date().toISOString() }
+        : {}),
+    })
     .eq("id", id)
     .eq("user_id", userId)
     .select()

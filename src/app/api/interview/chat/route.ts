@@ -88,7 +88,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           text: aiText,
           output_format: "wav",
-          preset_voice: ["af_bella"],
+          preset_voice: [voiceId],
         }),
       }
     );

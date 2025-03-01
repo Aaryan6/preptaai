@@ -3,7 +3,7 @@
 import { getMessages, storeMessage } from "@/actions/messages";
 import { Interview } from "@/lib/types";
 import { Message } from "ai";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import VideoComponent from "../../../components/video-component";
 import ControlPanel from "./control-panel";
 import ConversationSidebar from "./sidebar/conversation";
@@ -15,6 +15,9 @@ type InterviewLayoutProps = {
 export default function InterviewLayout({ interview }: InterviewLayoutProps) {
   const [conversation, setConversation] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const audioControlsRef = useRef<{ toggleRecording: () => void } | null>(null);
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -46,6 +49,14 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
     }
   };
 
+  const handleStartRecording = () => {
+    if (audioControlsRef.current) {
+      audioControlsRef.current.toggleRecording();
+    }
+  };
+
+  console.log({ interview });
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -56,15 +67,23 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
 
   return (
     <div className="flex flex-1 h-full bg-background">
-      <ConversationSidebar conversation={conversation} />
-
+      <ConversationSidebar
+        conversation={conversation}
+        onStartRecording={handleStartRecording}
+        isRecording={isRecording}
+        isProcessing={isProcessing}
+        interview={interview}
+      />
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full relative">
         <VideoComponent />
         <ControlPanel
+          ref={audioControlsRef}
           addToConversation={addToConversation}
           conversation={conversation}
           interview={interview}
+          onRecordingStateChange={setIsRecording}
+          onProcessingStateChange={setIsProcessing}
         />
       </div>
     </div>

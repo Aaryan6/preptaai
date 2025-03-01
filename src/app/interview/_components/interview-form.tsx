@@ -8,12 +8,20 @@ import UserDetails from "@/app/interview/_components/user-details";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { createInterview } from "@/actions/interview";
+import {
+  extractTextFromPDF,
+  extractTextFromDOCX,
+  extractTextFromDOC,
+} from "@/utils/file-extractors";
+import { toast, Toaster } from "sonner";
 
 type UserDetailsType = {
   name: string;
   jobRole: string;
   skills?: string;
   experience?: string;
+  resume?: File;
+  resumeText?: string;
 };
 
 type InterviewData = {
@@ -57,17 +65,59 @@ export default function InterviewForm() {
       userDetails: details,
     });
 
-    const interview = await createInterview({
-      job_role: details.jobRole,
-      user_id: user?.id || "",
-      experience: details.experience,
-      skills: details.skills,
-      type: interviewData.type as string,
-      voice_id: interviewData.interviewerId as string,
-    });
+    // Get resume text from either the file or directly from the selected resume
+    let resumeText = details.resumeText || "";
 
-    if (interview) {
-      router.push(`/interview/${interview.id}`);
+    // Extract text from uploaded file if no resumeText was provided but a file was
+    if (!resumeText && details.resume) {
+      try {
+        const fileType = details.resume.name.toLowerCase().split(".").pop();
+
+        // Extract text from resume file based on file type
+        switch (fileType) {
+          case "pdf":
+            resumeText = await extractTextFromPDF(details.resume);
+            break;
+          case "docx":
+            resumeText = await extractTextFromDOCX(details.resume);
+            break;
+          case "doc":
+            resumeText = await extractTextFromDOC(details.resume);
+            break;
+          default:
+            toast.error(
+              "Unsupported file type. Please upload a PDF, DOC, or DOCX file."
+            );
+            return;
+        }
+
+        console.log("Resume text extracted successfully");
+      } catch (error) {
+        console.error("Error extracting resume text:", error);
+        toast.error("Failed to process resume. Please try again.");
+        return;
+      }
+    }
+
+    try {
+      const interview = await createInterview({
+        job_role: details.jobRole,
+        user_id: user?.id || "",
+        experience: details.experience,
+        skills: details.skills,
+        type: interviewData.type as string,
+        voice_id: interviewData.interviewerId as string,
+        resume_text: resumeText || undefined,
+      });
+
+      if (interview) {
+        router.push(`/interview/${interview.id}`);
+      } else {
+        toast.error("Failed to create interview. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error creating interview:", error);
+      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -84,6 +134,7 @@ export default function InterviewForm() {
   return (
     <div className="grid lg:grid-cols-[1fr,400px] bg-muted h-full">
       <main className="flex flex-col items-center justify-center p-6 lg:p-12">
+        <Toaster />
         {step === "type" ? (
           <InterviewType
             onSelect={handleTypeSelect}
@@ -101,6 +152,7 @@ export default function InterviewForm() {
             onSubmit={handleUserDetailsSubmit}
             onBack={handleBack}
             initialData={interviewData.userDetails}
+            userId={user?.id}
           />
         )}
       </main>
