@@ -1,15 +1,13 @@
 "use client";
 
-import { Brain, Camera, PlayCircle, Sparkles, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Brain, User } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Interview } from "@/lib/types";
 import { Message } from "ai";
 import { useVideoStore } from "@/lib/stores/video-store";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import ControlPanel from "./control-panel";
+import AudioVisualizer from "@/components/user-voice-visualizer";
 
 interface InterviewVideoAreaProps {
   isInterviewerSpeaking: boolean;
@@ -42,6 +40,7 @@ export default function InterviewVideoArea({
 }: InterviewVideoAreaProps) {
   const { isVideoOn, stream } = useVideoStore();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -63,10 +62,14 @@ export default function InterviewVideoArea({
     }
   }, [stream]);
 
-  const addToConversation = async (message: Message) => {
-    // This is a dummy function since the actual add to conversation is handled in the parent
-    console.log("Message would be added:", message);
-  };
+  // Set mediaStream for AudioVisualizer when stream changes
+  useEffect(() => {
+    if (stream && isMicEnabled) {
+      setMediaStream(stream);
+    } else {
+      setMediaStream(null);
+    }
+  }, [stream, isMicEnabled]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 h-full">
@@ -74,9 +77,9 @@ export default function InterviewVideoArea({
       <div className="lg:col-span-2 relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-200/10 shadow-2xl flex items-center justify-center group">
         <div className="absolute top-6 left-6 flex items-center gap-3 z-10">
           {isGeneratingQuestion && (
-            <div className="flex items-center gap-2 bg-blue-500/10 backdrop-blur-md rounded-full px-4 py-2 border border-blue-500/20">
-              <Brain className="h-4 w-4 text-blue-400 animate-pulse" />
-              <span className="text-sm font-medium text-blue-300">
+            <div className="flex items-center gap-2 bg-teal-500/10 backdrop-blur-md rounded-full px-4 py-2 border border-teal-500/20">
+              <Brain className="h-4 w-4 text-teal-400 animate-pulse" />
+              <span className="text-sm font-medium text-teal-300">
                 Processing Response
               </span>
             </div>
@@ -117,14 +120,14 @@ export default function InterviewVideoArea({
             <div className="absolute inset-0 flex items-center justify-center z-10">
               <div className="bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-8 flex flex-col items-center gap-6">
                 <div className="relative">
-                  <Brain className="h-16 w-16 text-blue-400 animate-pulse" />
-                  <div className="absolute inset-0 animate-ping bg-blue-500/20 rounded-full" />
+                  <Brain className="h-16 w-16 text-teal-400 animate-pulse" />
+                  <div className="absolute inset-0 animate-ping bg-teal-500/20 rounded-full" />
                 </div>
                 <div className="space-y-2 text-center">
                   <p className="text-white text-lg font-medium">
                     Analyzing Response
                   </p>
-                  <p className="text-blue-300">Generating next question...</p>
+                  <p className="text-teal-300">Generating next question...</p>
                 </div>
               </div>
             </div>
@@ -158,39 +161,11 @@ export default function InterviewVideoArea({
         </div>
 
         {/* Audio visualization */}
-        {isUserSpeaking && isVideoOn && (
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-900 to-transparent flex items-end justify-center pb-4">
-            <div className="flex gap-1 items-end">
-              {Array.from({ length: 20 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="w-1 bg-blue-400/80 rounded-full transform transition-all duration-150"
-                  style={{
-                    height: `${Math.random() * 24 + 4}px`,
-                  }}
-                />
-              ))}
-            </div>
+        {isMicEnabled && (
+          <div className="absolute bottom-16 left-0 right-0 flex justify-center items-center pb-4 z-10">
+            <AudioVisualizer stream={mediaStream} />
           </div>
         )}
-
-        {/* Control Panel */}
-        {hasStarted &&
-          toggleMic &&
-          onRecordingStateChange &&
-          onProcessingStateChange &&
-          audioControlsRef && (
-            <ControlPanel
-              ref={audioControlsRef}
-              addToConversation={addToConversation}
-              conversation={conversation}
-              interview={interview}
-              onRecordingStateChange={onRecordingStateChange}
-              onProcessingStateChange={onProcessingStateChange}
-              isMicEnabled={isMicEnabled}
-              toggleMic={toggleMic}
-            />
-          )}
       </div>
     </div>
   );

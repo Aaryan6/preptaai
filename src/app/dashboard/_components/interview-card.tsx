@@ -28,11 +28,11 @@ export function InterviewCard({
   const cardStyles = {
     technical: {
       background:
-        "bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-950/50 dark:to-cyan-950/50",
-      border: "border-blue-200 dark:border-blue-900",
-      hover: "hover:border-blue-300 dark:hover:border-blue-800",
-      badge: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100",
-      button: "bg-blue-500 text-white",
+        "bg-gradient-to-br from-teal-100 to-teal-50 dark:from-teal-950/50 dark:to-teal-900/50",
+      border: "border-teal-200 dark:border-teal-900",
+      hover: "hover:border-teal-300 dark:hover:border-teal-800",
+      badge: "bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-100",
+      button: "bg-teal-500 text-white",
     },
     behavioral: {
       background:

@@ -73,7 +73,7 @@ const ControlPanel = forwardRef<
                       size="icon"
                       className={`rounded-full h-10 w-10 transition-all duration-300 ${
                         isMicEnabled
-                          ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white border-0 shadow-lg hover:from-blue-700 hover:to-blue-600"
+                          ? "bg-gradient-to-r from-teal-600 to-teal-500 text-white border-0 shadow-lg hover:from-teal-700 hover:to-teal-600"
                           : "bg-white text-gray-700 border border-gray-200/50 hover:bg-gray-50"
                       }`}
                       onClick={toggleMic}

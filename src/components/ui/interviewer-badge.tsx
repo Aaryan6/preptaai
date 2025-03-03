@@ -27,7 +27,7 @@ export default function InterviewerBadge({
   const variantClasses = {
     default: "bg-black/20 backdrop-blur-md border border-white/10 text-white",
     secondary:
-      "bg-blue-500/10 backdrop-blur-md border border-blue-500/20 text-blue-300",
+      "bg-teal-500/10 backdrop-blur-md border border-teal-500/20 text-teal-300",
     outline: "bg-transparent border border-gray-200/30 text-gray-200",
   }[variant];
 

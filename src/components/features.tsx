@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function FeaturesSection() {
   return (
@@ -31,19 +32,18 @@ export default function FeaturesSection() {
                 index === 2 ? "col-span-2" : ""
               }`}
             >
-              <div className="relative mb-6">
-                <div
-                  className={cn(
-                    "relative h-[200px] w-full rounded-lg bg-gray-50 overflow-hidden",
-                    index === 2 ? "h-[300px]" : ""
-                  )}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-gray-50/10 via-gray-50/80 to-gray-50" />
-                  <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-primary" />
-                  <div className="absolute top-4 left-8 w-48 h-2 rounded-full bg-gray-200" />
-                  <div className="absolute top-10 left-8 w-32 h-2 rounded-full bg-gray-200" />
-                  <div className="absolute top-20 left-1/2 -translate-x-1/2 w-24 h-8 rounded-md bg-primary" />
-                </div>
+              <div
+                className={cn(
+                  "relative mb-6 aspect-video max-h-[250px] w-full",
+                  index == 2 && "max-h-[350px]"
+                )}
+              >
+                <Image
+                  src={feature.image}
+                  alt={feature.title}
+                  fill
+                  className="w-full h-full object-cover"
+                />
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
@@ -57,17 +57,20 @@ export default function FeaturesSection() {
 
 const features = [
   {
-    title: "AI Powered Mock Interviews",
-    description:
-      "Get personalized design recommendations with AI-powered tools that helping you create a polished, professional website effortlessly.",
-  },
-  {
     title: "AI Resume Analyzer",
     description:
       "Choose from a wide range of professionally designed templates. Easily customize fonts, colors, and layouts to reflect your brand's.",
+    image: "/images/resume.png",
   },
   {
     title: "LinkedIn Bio & Headline Generator",
     description: "Boost your website's visibility with integrated SEO tools.",
+    image: "/images/linkedin-bio.png",
+  },
+  {
+    title: "AI Powered Mock Interviews",
+    description:
+      "Get personalized design recommendations with AI-powered tools that helping you create a polished, professional website effortlessly.",
+    image: "/images/mock-interview.png",
   },
 ];

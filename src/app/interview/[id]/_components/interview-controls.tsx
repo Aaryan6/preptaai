@@ -20,7 +20,6 @@ import {
 import { Interview } from "@/lib/types";
 import { Message, generateId } from "ai";
 import { useVideoStore } from "@/lib/stores/video-store";
-import AudioVisualizer from "@/components/user-voice-visualizer";
 
 interface InterviewControlsProps {
   addToConversation: (message: Message) => Promise<void>;
@@ -204,39 +203,35 @@ const InterviewControls = forwardRef<
       <div className="mt-6 flex items-center justify-center gap-4">
         <audio ref={audioRef} className="hidden" />
 
-        {/* Mic button with visualizer */}
-        <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className={`rounded-full h-12 w-12 transition-all duration-300 ${
-                    isMicEnabled
-                      ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white border-0 shadow-lg hover:from-blue-700 hover:to-blue-600"
-                      : "bg-white text-gray-700 border-gray-200/50 shadow-sm hover:bg-gray-50"
-                  }`}
-                  onClick={toggleMic}
-                  disabled={isProcessing}
-                >
-                  {isRecording ? (
-                    <Square className="h-5 w-5" />
-                  ) : isMicEnabled ? (
-                    <Mic className="h-5 w-5" />
-                  ) : (
-                    <MicOff className="h-5 w-5" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{isMicEnabled ? "Mute microphone" : "Unmute microphone"}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          {isMicEnabled && <AudioVisualizer stream={mediaStream} />}
-        </div>
+        {/* Mic button without visualizer */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className={`rounded-full h-12 w-12 transition-all duration-300 ${
+                  isMicEnabled
+                    ? "bg-gradient-to-r from-teal-600 to-teal-500 text-white border-0 shadow-lg hover:from-teal-700 hover:to-teal-600"
+                    : "bg-white text-gray-700 border-gray-200/50 shadow-sm hover:bg-gray-50"
+                }`}
+                onClick={toggleMic}
+                disabled={isProcessing}
+              >
+                {isRecording ? (
+                  <Square className="h-5 w-5" />
+                ) : isMicEnabled ? (
+                  <Mic className="h-5 w-5" />
+                ) : (
+                  <MicOff className="h-5 w-5" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{isMicEnabled ? "Mute microphone" : "Unmute microphone"}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         <TooltipProvider>
           <Tooltip>
@@ -246,7 +241,7 @@ const InterviewControls = forwardRef<
                 size="icon"
                 className={`rounded-full h-12 w-12 transition-all duration-300 ${
                   isVideoOn
-                    ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white border-0 shadow-lg hover:from-blue-700 hover:to-blue-600"
+                    ? "bg-gradient-to-r from-teal-600 to-teal-500 text-white border-0 shadow-lg hover:from-teal-700 hover:to-teal-600"
                     : "bg-white text-gray-700 border-gray-200/50 shadow-sm hover:bg-gray-50"
                 }`}
                 onClick={toggleVideo}
@@ -272,16 +267,19 @@ const InterviewControls = forwardRef<
                 size="icon"
                 className={`rounded-full h-12 w-12 transition-all duration-300 ${
                   showTranscript
-                    ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white border-0 shadow-lg hover:from-blue-700 hover:to-blue-600"
+                    ? "bg-gradient-to-r from-teal-600 to-teal-500 text-white border-0 shadow-lg hover:from-teal-700 hover:to-teal-600"
                     : "bg-white text-gray-700 border-gray-200/50 shadow-sm hover:bg-gray-50"
                 }`}
-                onClick={() => setShowTranscript(!showTranscript)}
+                onClick={() => {
+                  setShowTranscript(!showTranscript);
+                  // Show transcript tab is expected to be handled in the parent component
+                }}
               >
                 <MessageSquare className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{showTranscript ? "Hide transcript" : "Show transcript"}</p>
+              <p>{"Show transcript"}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

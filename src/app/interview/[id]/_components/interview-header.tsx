@@ -34,7 +34,7 @@ export default function InterviewHeader({
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              AI Interview Experience
+              {interview.job_role || "Interview Position"}
             </h1>
             {hasStarted && (
               <Badge className="bg-red-50/50 text-red-600 border-red-100 animate-pulse">
@@ -43,7 +43,7 @@ export default function InterviewHeader({
             )}
           </div>
           <p className="text-sm text-gray-500 mt-0.5">
-            {interview.job_role || "Interview Position"}
+            {interview.type || "Mock Interview"}
           </p>
         </div>
       </div>

@@ -19,7 +19,6 @@ import InterviewHeader from "./interview-header";
 import InterviewVideoArea from "./interview-video-area";
 import InterviewControls from "./interview-controls";
 import InterviewSidebar from "./interview-sidebar";
-import TranscriptSidebar from "./transcript-sidebar";
 
 type InterviewLayoutProps = {
   interview: Interview;
@@ -33,7 +32,7 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
   const [hasStarted, setHasStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
-  const [showTranscript, setShowTranscript] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
   const [isInterviewerSpeaking, setIsInterviewerSpeaking] = useState(false);
   const [isUserSpeaking, setIsUserSpeaking] = useState(false);
   const [isMicEnabled, setIsMicEnabled] = useState(false);
@@ -144,7 +143,7 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-gray-50">
       {/* Header */}
       <InterviewHeader
         interview={interview}
@@ -179,8 +178,15 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
           {/* Controls */}
           <InterviewControls
             ref={audioControlsRef}
-            setShowTranscript={setShowTranscript}
-            showTranscript={showTranscript}
+            setShowTranscript={() => {
+              // If sidebar is not showing, show it first
+              if (!showSidebar) {
+                setShowSidebar(true);
+              }
+              // Switch to transcript tab
+              setActiveTab("transcript");
+            }}
+            showTranscript={activeTab === "transcript" && showSidebar}
             addToConversation={addToConversation}
             conversation={conversation}
             interview={interview}
@@ -223,16 +229,11 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
             interview={interview}
             hasStarted={hasStarted}
             handleStartRecording={handleStartRecording}
-          />
-        )}
-
-        {/* Transcript sidebar */}
-        {showTranscript && (
-          <TranscriptSidebar
             conversation={conversation}
-            setShowTranscript={setShowTranscript}
             formatTime={formatTime}
             elapsedTime={elapsedTime}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
         )}
       </div>

@@ -81,16 +81,16 @@ export default function InterviewResult() {
             <h2 className="text-xl font-semibold text-gray-800">
               Overall Performance
             </h2>
-            <div className="flex items-center bg-blue-50 px-4 py-2 rounded-full">
+            <div className="flex items-center bg-teal-50 px-4 py-2 rounded-full">
               <Star className="text-yellow-500 h-5 w-5 mr-2" />
-              <span className="font-bold text-blue-700">85/100</span>
+              <span className="font-bold text-teal-700">85/100</span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200/50">
               <div className="flex items-center mb-2">
-                <BrainCircuit className="h-5 w-5 text-blue-500 mr-2" />
+                <BrainCircuit className="h-5 w-5 text-teal-500 mr-2" />
                 <h3 className="font-medium text-gray-700">
                   Technical Accuracy
                 </h3>
@@ -98,7 +98,7 @@ export default function InterviewResult() {
               <div className="flex items-center justify-between">
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    className="bg-blue-600 h-2.5 rounded-full"
+                    className="bg-teal-600 h-2.5 rounded-full"
                     style={{ width: "88%" }}
                   ></div>
                 </div>
@@ -234,8 +234,8 @@ export default function InterviewResult() {
         {/* Action Items */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <div className="flex items-center mb-6">
-            <div className="p-2 bg-blue-100 rounded-lg mr-3">
-              <BrainCircuit className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-teal-100 rounded-lg mr-3">
+              <BrainCircuit className="h-5 w-5 text-teal-600" />
             </div>
             <h2 className="text-xl font-semibold text-gray-800">
               Recommended Next Steps
@@ -243,8 +243,8 @@ export default function InterviewResult() {
           </div>
 
           <div className="space-y-4">
-            <div className="p-4 border border-blue-100 rounded-lg bg-blue-50">
-              <h3 className="font-medium text-blue-800 mb-2">
+            <div className="p-4 border border-teal-100 rounded-lg bg-teal-50">
+              <h3 className="font-medium text-teal-800 mb-2">
                 Practice Backend Technologies
               </h3>
               <p className="text-gray-700">

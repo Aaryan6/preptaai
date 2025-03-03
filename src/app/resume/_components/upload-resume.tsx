@@ -6,11 +6,14 @@ import {
   extractTextFromDOCX,
   extractTextFromDOC,
 } from "@/utils/file-extractors";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, Zap, ArrowRight } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import { createResumeAnalysis } from "@/actions/resume";
 import { useUser } from "@clerk/nextjs";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function UploadResume() {
   const router = useRouter();
@@ -19,6 +22,50 @@ export default function UploadResume() {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFile = e.dataTransfer.files[0];
+      if (isValidFileType(droppedFile)) {
+        setFile(droppedFile);
+      }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFile = e.target.files[0];
+      if (isValidFileType(selectedFile)) {
+        setFile(selectedFile);
+      }
+    }
+  };
+
+  const isValidFileType = (file: File) => {
+    const validTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    return validTypes.includes(file.type);
+  };
+
+  const handleRemoveFile = () => {
+    setFile(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,96 +168,134 @@ export default function UploadResume() {
   }
 
   return (
-    <div className="w-full">
-      <div className="max-w-xl w-full mx-auto bg-white rounded-2xl shadow-lg p-8">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="w-full"
+    >
+      <Toaster />
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto relative z-10">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
+          <div className="space-y-2">
             <label
               htmlFor="jobRole"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="text-sm font-medium text-gray-700"
             >
               Desired Job Role
             </label>
-            <input
-              type="text"
+            <Input
               id="jobRole"
               value={jobRole}
               onChange={(e) => setJobRole(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+              className="rounded-lg border-gray-300 focus:border-teal-500 focus:ring-teal-500"
               placeholder="e.g. Software Engineer, Product Manager"
               required
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="resume"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">
               Upload Resume
             </label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-purple-500 transition cursor-pointer">
-              <div className="space-y-1 text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 48 48"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div className="flex text-sm text-gray-600">
-                  <label
-                    htmlFor="file-upload"
-                    className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
-                  >
-                    <span>Upload a file</span>
+            <div
+              className={`border-2 border-dashed rounded-xl p-8 transition-colors duration-200 ${
+                isDragging
+                  ? "border-teal-500 bg-teal-50"
+                  : file
+                  ? "border-teal-500 bg-teal-50"
+                  : "border-gray-300 hover:border-teal-400"
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <div className="flex flex-col items-center justify-center gap-3 text-center">
+                {file ? (
+                  <>
+                    <div className="h-12 w-12 rounded-full bg-teal-100 flex items-center justify-center">
+                      <Zap className="h-6 w-6 text-teal-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {file.name}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRemoveFile}
+                      className="mt-2 border-teal-200 text-teal-700 hover:bg-teal-50"
+                    >
+                      Remove
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <div className="h-12 w-12 rounded-full bg-teal-100 flex items-center justify-center">
+                      <Upload className="h-6 w-6 text-teal-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-700">
+                        <label
+                          htmlFor="file-upload"
+                          className="text-teal-600 hover:underline cursor-pointer"
+                        >
+                          Upload a file
+                        </label>{" "}
+                        or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        PDF, DOC, DOCX up to 10MB
+                      </p>
+                    </div>
                     <input
-                      id="file-upload"
-                      name="file-upload"
                       type="file"
-                      className="sr-only"
+                      id="file-upload"
+                      className="hidden"
                       accept=".pdf,.doc,.docx"
-                      onChange={(e) => setFile(e.target.files?.[0] || null)}
-                      required
+                      onChange={handleFileChange}
                     />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
-                </div>
-                <p className="text-xs text-gray-500">
-                  PDF, DOC, DOCX up to 10MB
-                </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        document.getElementById("file-upload")?.click()
+                      }
+                      className="mt-2 border-teal-200 text-teal-700 hover:bg-teal-50"
+                    >
+                      Select File
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
-            {file && (
-              <p className="mt-2 text-sm text-gray-600">
-                Selected file: {file.name}
-              </p>
-            )}
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Analyzing Resume...
-              </>
-            ) : (
-              "Analyze Resume"
-            )}
-          </button>
+          <div className="mt-8">
+            <Button
+              type="submit"
+              disabled={isLoading || !file || !jobRole}
+              className="w-full py-6 text-base font-medium rounded-lg bg-teal-500 hover:bg-teal-600 transition-all duration-200"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Analyzing Resume...
+                </>
+              ) : (
+                <>
+                  Analyze Resume
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </>
+              )}
+            </Button>
+          </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 }
