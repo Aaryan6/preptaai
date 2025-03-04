@@ -16,7 +16,7 @@ export default function FeaturesSection() {
           >
             <p className="text-primary font-medium mb-4">FEATURES</p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold max-w-3xl mx-auto leading-tight">
-              Powerful features to simplify your web building experience
+              Powerful AI tools to boost your interview success
             </h2>
           </motion.div>
         </div>
@@ -42,7 +42,7 @@ export default function FeaturesSection() {
                   src={feature.image}
                   alt={feature.title}
                   fill
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
@@ -59,18 +59,19 @@ const features = [
   {
     title: "AI Resume Analyzer",
     description:
-      "Choose from a wide range of professionally designed templates. Easily customize fonts, colors, and layouts to reflect your brand's.",
+      "Get detailed metrics on your resume's content, format, and impact. Receive actionable feedback to optimize your resume for applicant tracking systems and highlight your achievements more effectively.",
     image: "/images/resume.png",
   },
   {
     title: "LinkedIn Bio & Headline Generator",
-    description: "Boost your website's visibility with integrated SEO tools.",
+    description:
+      "Create compelling LinkedIn profiles that attract recruiter attention. Our AI analyzes industry trends and best practices to help you craft standout headlines and professional summaries.",
     image: "/images/linkedin-bio.png",
   },
   {
-    title: "AI Powered Mock Interviews",
+    title: "AI-Powered Mock Interviews",
     description:
-      "Get personalized design recommendations with AI-powered tools that helping you create a polished, professional website effortlessly.",
+      "Practice with realistic interview scenarios led by AI interviewers with different personalities. Receive real-time transcripts and comprehensive feedback on your technical accuracy, communication skills, pacing, and keyword usage to improve your performance.",
     image: "/images/mock-interview.png",
   },
 ];

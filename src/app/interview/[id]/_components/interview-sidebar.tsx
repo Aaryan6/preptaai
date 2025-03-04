@@ -114,6 +114,16 @@ export default function InterviewSidebar({
                     </span>
                   </div>
                 </div>
+                {hasStarted && (
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 border border-teal-200/50">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-teal-700">Duration</span>
+                      <span className="font-medium text-teal-900">
+                        {formatTime(elapsedTime)}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="mt-8">

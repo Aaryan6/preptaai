@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { GridPattern } from "./ui/grid-pattern";
-import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -17,7 +15,7 @@ export function HeroSection() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/interview">
-            <Button className="" variant="big">
+            <Button className="font-semibold" variant="big">
               Get Started - it&apos;s free <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>

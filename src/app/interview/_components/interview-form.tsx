@@ -64,11 +64,6 @@ export default function InterviewForm({ interviewers }: InterviewFormProps) {
 
   const handleUserDetailsSubmit = async (details: UserDetailsType) => {
     setInterviewData((prev) => ({ ...prev, userDetails: details }));
-    // Here you can handle the final submission of all data
-    console.log("Final interview data:", {
-      ...interviewData,
-      userDetails: details,
-    });
 
     // Get resume text from either the file or directly from the selected resume
     let resumeText = details.resumeText || "";

@@ -105,7 +105,7 @@ export default function LinkedInBioForm() {
         </div>
       </div>
 
-      <div className="absolute bottom-[30rem] right-20 hidden lg:block">
+      <div className="absolute bottom-[30rem] right-20 hidden lg:block z-0">
         <div className="bg-white rounded-xl shadow-lg p-4 rotate-[5deg] w-64">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="h-5 w-5 text-teal-500" />
@@ -117,7 +117,7 @@ export default function LinkedInBioForm() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-16 max-w-5xl">
+      <div className="container mx-auto px-4 py-16 max-w-6xl relative z-10">
         <div className="flex flex-col items-center text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -202,9 +202,12 @@ export default function LinkedInBioForm() {
                       </div>
                       <div>
                         <p className="font-medium text-gray-700">
-                          <span className="text-teal-600 hover:underline cursor-pointer">
+                          <label
+                            htmlFor="resume"
+                            className="text-teal-600 hover:underline cursor-pointer"
+                          >
                             Upload a file
-                          </span>{" "}
+                          </label>{" "}
                           or drag and drop
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
@@ -220,6 +223,7 @@ export default function LinkedInBioForm() {
                       />
                       <Button
                         variant="outline"
+                        type="button"
                         size="sm"
                         onClick={() =>
                           document.getElementById("resume")?.click()
@@ -282,35 +286,76 @@ export default function LinkedInBioForm() {
 
         {bios.length > 0 && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="space-y-8"
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 py-12 text-center">
               Generated LinkedIn Bios
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {bios.map((bio, index) => (
-                <Card key={index} className="bg-white">
-                  <CardHeader>
-                    <CardTitle className="text-lg font-semibold">
-                      Version {index + 1}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="text-sm font-medium text-gray-500">
-                        Headline
-                      </h3>
-                      <p className="text-sm text-gray-900">{bio.headline}</p>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-sm font-medium text-gray-500">Bio</h3>
-                      <p className="text-sm text-gray-900">{bio.bio}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.1 * index }}
+                  className="h-full"
+                >
+                  <Card className="bg-white hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100 hover:border-teal-100 rounded-xl h-full flex flex-col">
+                    <CardHeader className="bg-gradient-to-r from-teal-50 to-white pb-4 border-b border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-semibold text-gray-800">
+                          Bio {index + 1}
+                        </CardTitle>
+                        <div className="h-7 w-7 rounded-full bg-teal-100 flex items-center justify-center">
+                          <Linkedin className="h-3.5 w-3.5 text-teal-600" />
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-5 flex flex-col h-full gap-2">
+                      <div className="space-y-5 flex-1">
+                        <div className="space-y-2">
+                          <h3 className="text-sm font-medium text-teal-600">
+                            Headline
+                          </h3>
+                          <p className="text-sm text-gray-900 font-medium leading-relaxed">
+                            {bio.headline}
+                          </p>
+                        </div>
+                        <div className="space-y-2 flex-1">
+                          <h3 className="text-sm font-medium text-teal-600">
+                            Bio
+                          </h3>
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {bio.bio}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="pt-2 flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-teal-200 text-teal-700 hover:bg-teal-50 flex-1"
+                          onClick={() =>
+                            navigator.clipboard.writeText(bio.headline)
+                          }
+                        >
+                          Copy Headline
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-teal-200 text-teal-700 hover:bg-teal-50 flex-1"
+                          onClick={() => navigator.clipboard.writeText(bio.bio)}
+                        >
+                          Copy Bio
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </motion.div>

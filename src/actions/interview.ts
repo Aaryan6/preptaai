@@ -1,6 +1,6 @@
 "use server";
 
-import { Interview, CreateInterview } from "@/lib/types";
+import { Interview, CreateInterview, InterviewResult } from "@/lib/types";
 import { createClient } from "@/utils/supabase/server";
 
 export async function createInterview(interview: CreateInterview) {
@@ -33,10 +33,30 @@ export async function getInterview(id: string) {
   return data as Interview;
 }
 
+export async function getInterviewResult(interviewId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("interview_results")
+    .select("*")
+    .eq("interview_id", interviewId)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+
+  return data as InterviewResult;
+}
+
 export async function updateInterview(
   id: string,
   userId: string,
-  status: { status: "completed" | "in-progress"; completed_at?: string }
+  status: {
+    status: "completed" | "in-progress";
+    completed_at?: string;
+    started_at?: string;
+  }
 ) {
   const supabase = await createClient();
   const { data, error } = await supabase

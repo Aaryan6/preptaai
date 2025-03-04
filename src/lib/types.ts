@@ -41,6 +41,7 @@ export type InterviewResult = {
     improvements: string[];
   };
   created_at?: string;
+  duration?: string;
 };
 
 export type ResumeAnalysis = {

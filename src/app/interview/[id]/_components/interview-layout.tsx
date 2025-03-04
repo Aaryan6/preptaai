@@ -104,7 +104,10 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
     try {
       if (user && interview.id) {
         // Update interview status to "in-progress"
-        await updateInterview(interview.id, user.id, { status: "in-progress" });
+        await updateInterview(interview.id, user.id, {
+          status: "in-progress",
+          started_at: new Date().toISOString(),
+        });
       }
 
       setHasStarted(true);

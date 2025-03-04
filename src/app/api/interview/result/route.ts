@@ -109,6 +109,14 @@ Ensure all scores are integers between 0 and 100, and each feedback array contai
         interview_id: interviewId,
         metrics: result.metrics,
         feedback: result.feedback,
+        duration:
+          interview.completed_at && interview.started_at
+            ? Math.floor(
+                (new Date(interview.completed_at).getTime() -
+                  new Date(interview.started_at).getTime()) /
+                  1000
+              ).toString()
+            : null,
       })
       .select()
       .single();
@@ -117,6 +125,7 @@ Ensure all scores are integers between 0 and 100, and each feedback array contai
       .from("interviews")
       .update({
         status: "completed",
+        completed_at: new Date().toISOString(),
       })
       .eq("id", interviewId);
 

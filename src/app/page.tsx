@@ -1,8 +1,8 @@
-import { HeroSection } from "@/components/hero";
 import { AppPreview } from "@/components/app-preview";
-import FeaturesSection from "@/components/features";
 import FAQSection from "@/components/faq";
+import FeaturesSection from "@/components/features";
 import FooterSection from "@/components/footer";
+import SignupSection from "@/components/waitlist";
 
 export default function Home() {
   return (
@@ -11,7 +11,8 @@ export default function Home() {
       {/* <HeroSection /> */}
       <AppPreview />
       <FeaturesSection />
-      <FAQSection />
+      {/* <FAQSection /> */}
+      <SignupSection />
       <FooterSection />
     </div>
   );

@@ -1,37 +1,23 @@
-import { Hexagon, Github, Twitter } from "lucide-react";
+import { Cpu } from "lucide-react";
 import { Footer } from "@/components/ui/footer";
 
 export default function FooterSection() {
   return (
-    <div className="w-full">
+    <div className="w-full border-t bg-background/80 backdrop-blur-sm">
       <Footer
-        logo={<Hexagon className="h-10 w-10" />}
-        brandName="Awesome Corp"
-        socialLinks={[
-          {
-            icon: <Twitter className="h-5 w-5" />,
-            href: "https://twitter.com",
-            label: "Twitter",
-          },
-          {
-            icon: <Github className="h-5 w-5" />,
-            href: "https://github.com",
-            label: "GitHub",
-          },
-        ]}
+        logo={<Cpu className="h-10 w-10 text-primary" />}
+        brandName="PreptaAI"
+        socialLinks={[]}
         mainLinks={[
-          { href: "/products", label: "Products" },
-          { href: "/about", label: "About" },
-          { href: "/blog", label: "Blog" },
-          { href: "/contact", label: "Contact" },
+          { href: "/interview", label: "Mock Interviews" },
+          { href: "/resume", label: "Resume Analyzer" },
+          { href: "/linkedin-bio", label: "LinkedIn Helper" },
+          { href: "/dashboard", label: "Dashboard" },
         ]}
-        legalLinks={[
-          { href: "/privacy", label: "Privacy" },
-          { href: "/terms", label: "Terms" },
-        ]}
+        legalLinks={[]}
         copyright={{
-          text: "© 2024 Awesome Corp",
-          license: "All rights reserved",
+          text: `© ${new Date().getFullYear()} PreptaAI`,
+          license: "Helping you ace your next interview",
         }}
       />
     </div>
