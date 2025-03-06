@@ -2,7 +2,7 @@
 
 import { Brain, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Interview } from "@/lib/types";
+import { ChatMessages, Interview } from "@/lib/types";
 import { Message } from "ai";
 import { useVideoStore } from "@/lib/stores/video-store";
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +16,7 @@ interface InterviewVideoAreaProps {
   hasStarted: boolean;
   handleStartRecording: () => void;
   interview: Interview;
-  conversation: Message[];
+  conversation: ChatMessages[];
   isMicEnabled?: boolean;
   toggleMic?: () => void;
   onRecordingStateChange?: (state: boolean) => void;
@@ -75,17 +75,6 @@ export default function InterviewVideoArea({
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 h-full">
       {/* AI Interviewer video */}
       <div className="lg:col-span-2 relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-200/10 shadow-2xl flex items-center justify-center group">
-        <div className="absolute top-6 left-6 flex items-center gap-3 z-10">
-          {isGeneratingQuestion && (
-            <div className="flex items-center gap-2 bg-teal-500/10 backdrop-blur-md rounded-full px-4 py-2 border border-teal-500/20">
-              <Brain className="h-4 w-4 text-teal-400 animate-pulse" />
-              <span className="text-sm font-medium text-teal-300">
-                Processing Response
-              </span>
-            </div>
-          )}
-        </div>
-
         <div className="relative w-full h-full group">
           <div className="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
             {interview?.interviewers_info?.avatar ? (
@@ -110,28 +99,21 @@ export default function InterviewVideoArea({
 
           {/* Interviewer name at bottom */}
           <div className="absolute bottom-0 left-0 right-0 bg-foreground/70 backdrop-blur-sm py-3 px-4 z-10 rounded-s-2xl rounded-e-2xl">
-            <p className="text-white font-medium text-center">
-              {interview?.interviewers_info?.name || "AI Interviewer"}
-            </p>
-          </div>
+            <div className="flex flex-col space-y-1">
+              <p className="text-white font-medium text-center">
+                {interview?.interviewers_info?.name || "AI Interviewer"}
+              </p>
 
-          {/* AI thinking animation */}
-          {isGeneratingQuestion && (
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <div className="bg-white/10 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-8 flex flex-col items-center gap-6">
-                <div className="relative">
-                  <Brain className="h-16 w-16 text-teal-400 animate-pulse" />
-                  <div className="absolute inset-0 animate-ping bg-teal-500/20 rounded-full" />
+              {/* Processing indicator bar */}
+              {isGeneratingQuestion && (
+                <div className="w-full px-4 flex justify-center items-center">
+                  <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-teal-500 rounded-full animate-[pulse-width_1.5s_ease-in-out_infinite]"></div>
+                  </div>
                 </div>
-                <div className="space-y-2 text-center">
-                  <p className="text-white text-lg font-medium">
-                    Analyzing Response
-                  </p>
-                  <p className="text-teal-300">Generating next question...</p>
-                </div>
-              </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 

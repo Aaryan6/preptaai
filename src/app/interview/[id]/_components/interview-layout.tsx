@@ -1,31 +1,30 @@
 "use client";
 
-import { getMessages, storeMessage } from "@/actions/messages";
 import { updateInterview } from "@/actions/interview";
-import { Interview } from "@/lib/types";
-import { Message } from "ai";
-import { useEffect, useState, useRef } from "react";
-import { ChevronLeft, Timer, Maximize2, ChevronRight } from "lucide-react";
+import { getMessages, storeMessage } from "@/actions/messages";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ChatMessages, Interview } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
-import InterviewHeader from "./interview-header";
-import InterviewVideoArea from "./interview-video-area";
+import { Message } from "ai";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import InterviewControls from "./interview-controls";
+import InterviewHeader from "./interview-header";
 import InterviewSidebar from "./interview-sidebar";
+import InterviewVideoArea from "./interview-video-area";
 
 type InterviewLayoutProps = {
   interview: Interview;
 };
 
 export default function InterviewLayout({ interview }: InterviewLayoutProps) {
-  const [conversation, setConversation] = useState<Message[]>([]);
+  const [conversation, setConversation] = useState<ChatMessages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -48,6 +47,9 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
             id: msg.id,
             content: msg.content,
             role: msg.role as "user" | "assistant",
+            created_at: msg.created_at,
+            interview_id: msg.interview_id,
+            audio_url: msg.audio_url,
           }))
         );
 
@@ -82,7 +84,7 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  const addToConversation = async (message: Message) => {
+  const addToConversation = async (message: ChatMessages) => {
     try {
       await storeMessage(message, interview.id);
       setConversation((prev) => [...prev, message]);
@@ -233,8 +235,8 @@ export default function InterviewLayout({ interview }: InterviewLayoutProps) {
             hasStarted={hasStarted}
             handleStartRecording={handleStartRecording}
             conversation={conversation}
-            formatTime={formatTime}
             elapsedTime={elapsedTime}
+            formatTime={formatTime}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
           />

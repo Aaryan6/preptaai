@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogIn, LogOut } from "lucide-react";
 
 const menuItems = [
   {
@@ -113,13 +114,28 @@ export function NavBar() {
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem className="flex items-center gap-2 py-3 justify-between cursor-pointer">
-                <SignOutButton />
+                <SignOutButton>
+                  <span className="flex items-center gap-2">
+                    Sign Out
+                    <LogOut className="w-4 h-4" />
+                  </span>
+                </SignOutButton>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SignedIn>
         <SignedOut>
-          <SignInButton />
+          <SignInButton>
+            <Button
+              variant="outline"
+              className="text-teal-700 hover:text-teal-800"
+            >
+              <span className="flex items-center gap-2">
+                Sign In
+                <LogIn className="w-4 h-4" />
+              </span>
+            </Button>
+          </SignInButton>
         </SignedOut>
       </div>
     </nav>

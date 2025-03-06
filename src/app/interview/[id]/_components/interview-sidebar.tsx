@@ -1,26 +1,26 @@
 "use client";
 
-import { Brain, PlayCircle, User, Wand2 } from "lucide-react";
+import { Brain, PlayCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Interview } from "@/lib/types";
-import { Message } from "ai";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ChatMessages, Interview } from "@/lib/types";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TranscriptEntry {
   id: number;
-  speaker: "AI Interviewer" | "You";
+  speaker: "You" | string;
   text: string;
-  time: string;
+  time: any;
+  audio_url: string;
 }
 
 interface InterviewSidebarProps {
   interview: Interview;
   hasStarted: boolean;
   handleStartRecording: () => void;
-  conversation?: Message[];
-  formatTime?: (seconds: number) => string;
+  conversation?: ChatMessages[];
   elapsedTime?: number;
+  formatTime: (seconds: number) => string;
   activeTab?: string;
   setActiveTab?: Dispatch<SetStateAction<string>>;
 }
@@ -30,12 +30,9 @@ export default function InterviewSidebar({
   hasStarted,
   handleStartRecording,
   conversation = [],
-  formatTime = (seconds) =>
-    `${Math.floor(seconds / 60)}:${seconds % 60 < 10 ? "0" : ""}${
-      seconds % 60
-    }`,
   elapsedTime = 0,
   activeTab = "details",
+  formatTime,
   setActiveTab,
 }: InterviewSidebarProps) {
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
@@ -49,21 +46,29 @@ export default function InterviewSidebar({
   useEffect(() => {
     // Convert conversation to transcript format
     if (conversation.length > 0) {
-      const formattedTranscript = conversation.map((message, index) => ({
-        id: index + 1,
-        speaker:
-          message.role === "user"
-            ? ("You" as const)
-            : ("AI Interviewer" as const),
-        text: message.content,
-        time: formatTime(
-          Math.max(0, elapsedTime - (conversation.length - index) * 20)
-        ),
-      }));
+      const formattedTranscript = conversation.map((message, index) => {
+        return {
+          id: index + 1,
+          speaker:
+            message.role === "user"
+              ? ("You" as const)
+              : interview.interviewers_info?.name ||
+                ("AI Interviewer" as const),
+          text: message.content,
+          time: message.created_at
+            ? new Date(message.created_at).toLocaleTimeString([], {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              })
+            : "",
+          audio_url: message.audio_url || "",
+        };
+      });
 
       setTranscript(formattedTranscript);
     }
-  }, [conversation, elapsedTime, formatTime]);
+  }, [conversation]);
 
   const handleTabChange = (value: string) => {
     setLocalActiveTab(value);
@@ -72,8 +77,16 @@ export default function InterviewSidebar({
     }
   };
 
+  const transcriptEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (transcriptEndRef.current) {
+      transcriptEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [transcript]);
+
   return (
-    <div className="hidden xl:block border-l border-gray-200/50 bg-white/80 backdrop-blur-xl overflow-hidden transition-all duration-300 w-full max-w-[20rem]">
+    <div className="hidden lg:block border-l border-gray-200/50 bg-white/80 backdrop-blur-xl overflow-hidden transition-all duration-300 w-full max-w-[20rem]">
       <div className="flex flex-col h-full w-full">
         <Tabs
           value={localActiveTab}
@@ -157,7 +170,7 @@ export default function InterviewSidebar({
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      {entry.speaker === "AI Interviewer" ? (
+                      {entry.speaker !== "You" ? (
                         <div className="p-1 rounded-lg bg-teal-100">
                           <Brain className="h-4 w-4 text-teal-600" />
                         </div>
@@ -177,6 +190,7 @@ export default function InterviewSidebar({
                   </p>
                 </div>
               ))}
+              <div className="" ref={transcriptEndRef} />
 
               {transcript.length === 0 && (
                 <div className="text-center py-12">

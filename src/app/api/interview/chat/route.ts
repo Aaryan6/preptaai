@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@deepgram/sdk";
 import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import { Message } from "ai";
-import { interviewers } from "@/lib/interviews";
+import { currentUser } from "@clerk/nextjs/server";
 
-const deepgram = createClient(process.env.DEEPGRAM_API_KEY!);
+// Check for required environment variables
+if (!process.env.GROQ_API_KEY) {
+  throw new Error("Missing GROQ_API_KEY environment variable");
+}
 
 export async function POST(req: Request) {
+  const user = await currentUser();
   try {
     const formData = await req.formData();
     const audioFile = formData.get("audio") as Blob;
@@ -21,23 +24,52 @@ export async function POST(req: Request) {
     const experience = (formData.get("experience") as string) || "3";
     const type = (formData.get("type") as string) || "technical";
     const voiceId = (formData.get("voiceId") as string) || "aura-orpheus-en";
+    const resumeText = (formData.get("resumeText") as string) || "";
+    const interviewerName = (formData.get("interviewerName") as string) || "";
 
     if (!audioFile) {
       throw new Error("No audio file provided");
     }
 
-    // 1. Convert audio to text using Deepgram
+    // 1. Convert audio to text using Groq Whisper API
     const audioBuffer = Buffer.from(await audioFile.arrayBuffer());
-    const transcriptionResponse =
-      await deepgram.listen.prerecorded.transcribeFile(audioBuffer, {
-        smart_format: true,
-        model: "nova-2",
-        mimetype: "audio/webm",
-      });
 
-    const transcribedText =
-      transcriptionResponse.result?.results?.channels[0]?.alternatives[0]
-        ?.transcript || "";
+    // Create a File object from the Buffer
+    const audioFileObj = new File([audioBuffer], "audio.mp3", {
+      type: "audio/webm",
+    });
+
+    // Create and populate FormData for Groq API
+    const groqFormData = new FormData();
+    groqFormData.append("file", audioFileObj);
+    groqFormData.append("model", "whisper-large-v3-turbo");
+    groqFormData.append("response_format", "json");
+    groqFormData.append("language", "en");
+    groqFormData.append("temperature", "0");
+
+    // Call Groq API for transcription
+    const transcriptionResponse = await fetch(
+      "https://api.groq.com/openai/v1/audio/transcriptions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        },
+        body: groqFormData,
+      }
+    );
+
+    if (!transcriptionResponse.ok) {
+      const errorData = await transcriptionResponse.json();
+      throw new Error(
+        `Groq Whisper API error: ${
+          errorData.error?.message || transcriptionResponse.statusText
+        }`
+      );
+    }
+
+    const transcriptionData = await transcriptionResponse.json();
+    const transcribedText = transcriptionData.text || "";
 
     // Add the new user message to the context
     const updatedMessages: Message[] = [
@@ -45,22 +77,12 @@ export async function POST(req: Request) {
       { role: "user", content: transcribedText, id: Date.now().toString() },
     ];
 
-    // Get interviewer name based on voiceId
-    const getInterviewerName = (id: string) => {
-      const interviewer = interviewers.find(
-        (interviewer) => interviewer.id === id
-      );
-      return interviewer?.name || "Interviewer";
-    };
-
-    const interviewerName = getInterviewerName(voiceId);
-
     // 2. Get AI response using the chat route logic with context
     const { text: aiText } = await generateText({
       messages: updatedMessages,
       model: openai("gpt-4o-mini"),
       system: `
-      You are ${interviewerName}, a professional interviewer conducting a ${type} interview for a ${jobRole} position.
+      Your name is ${interviewerName}, and you are a professional interviewer conducting a ${type} interview for a ${jobRole} position.
       You are an expert in ${skills} and evaluating candidates with around ${experience} years of experience.
       
       Approach:
@@ -73,7 +95,13 @@ export async function POST(req: Request) {
       - Avoid using bullet points, markdown, or other formatting
       - If a candidate struggles, be firm but fair - offer minimal guidance only when necessary
       
-      Your goal is to thoroughly evaluate if this candidate has the skills and experience necessary for the ${jobRole} position. Focus on practical scenarios they would face in this role.`,
+      Your goal is to thoroughly evaluate if this candidate has the skills and experience necessary for the ${jobRole} position. Focus on practical scenarios they would face in this role.
+
+      Remember the user name is ${user?.firstName}
+      
+      ${resumeText && `Here is the candidate's resume information:`}
+      ${resumeText}
+      `,
     });
 
     // 3. Convert AI response to speech using Kokoro

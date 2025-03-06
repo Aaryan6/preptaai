@@ -102,3 +102,19 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+/* Processing animation keyframes */
+@keyframes pulse-width {
+  0% {
+    width: 0%;
+    opacity: 0.6;
+  }
+  50% {
+    width: 100%;
+    opacity: 1;
+  }
+  100% {
+    width: 0%;
+    opacity: 0.6;
+  }
+}

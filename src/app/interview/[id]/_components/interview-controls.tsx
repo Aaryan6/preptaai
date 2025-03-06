@@ -17,13 +17,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Interview } from "@/lib/types";
-import { Message, generateId } from "ai";
+import { ChatMessages, Interview } from "@/lib/types";
+import { generateId } from "ai";
 import { useVideoStore } from "@/lib/stores/video-store";
 
 interface InterviewControlsProps {
-  addToConversation: (message: Message) => Promise<void>;
-  conversation: Message[];
+  addToConversation: (message: ChatMessages) => Promise<void>;
+  conversation: ChatMessages[];
   interview: Interview;
   onRecordingStateChange: (state: boolean) => void;
   onProcessingStateChange: (state: boolean) => void;
@@ -131,6 +131,12 @@ const InterviewControls = forwardRef<
           "voiceId",
           interview.interviewers_info?.voice_id || "aura-orpheus-en"
         );
+        formData.append("resumeText", interview?.resume_text || "");
+        formData.append(
+          "interviewerName",
+          interview.interviewers_info?.name || ""
+        );
+        formData.append("interviewId", interview.id);
 
         const response = await fetch("/api/interview/chat", {
           method: "POST",
@@ -148,6 +154,7 @@ const InterviewControls = forwardRef<
             id: generateId(),
             role: "user",
             content: data.transcribedText,
+            interview_id: interview.id,
           });
         }
 
@@ -156,6 +163,7 @@ const InterviewControls = forwardRef<
             id: generateId(),
             role: "assistant",
             content: data.aiText,
+            interview_id: interview.id,
           });
         }
 

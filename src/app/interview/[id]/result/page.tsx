@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import moment from "moment";
 import {
   ArrowLeft,
   Download,
@@ -33,6 +34,28 @@ import {
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
+const formatDuration = (
+  startedAt: string | undefined,
+  completedAt: string | undefined
+) => {
+  if (!startedAt || !completedAt) return "0m 0s";
+
+  const start = moment(startedAt);
+  const end = moment(completedAt);
+  const durationInSeconds = end.diff(start, "seconds");
+
+  const minutes = Math.floor(durationInSeconds / 60);
+  const seconds = durationInSeconds % 60;
+
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${hours}h ${remainingMinutes}m ${seconds}s`;
+  }
+
+  return `${minutes}m ${seconds}s`;
+};
+
 export default function InterviewResult() {
   const params = useParams();
   const router = useRouter();
@@ -44,22 +67,6 @@ export default function InterviewResult() {
   const [generating, setGenerating] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
-
-  // Format duration from seconds to mm:ss or hh:mm:ss
-  const formatDuration = (seconds: string | undefined) => {
-    if (!seconds) return "N/A";
-
-    const totalSeconds = parseInt(seconds);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const remainingSeconds = totalSeconds % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}m ${remainingSeconds}s`;
-    } else {
-      return `${minutes}m ${remainingSeconds}s`;
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -169,7 +176,10 @@ export default function InterviewResult() {
       pdf.setFontSize(12);
       pdf.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 30);
       pdf.text(
-        `Interview Duration: ${formatDuration(result?.duration)}`,
+        `Interview Duration: ${formatDuration(
+          interview?.started_at,
+          interview?.completed_at
+        )}`,
         14,
         38
       );
@@ -426,7 +436,11 @@ export default function InterviewResult() {
               <div className="flex items-center bg-blue-50 px-4 py-2 rounded-full">
                 <Clock className="text-blue-500 h-5 w-5 mr-2" />
                 <span className="font-medium text-blue-700">
-                  Duration: {formatDuration(result?.duration)}
+                  Duration:{" "}
+                  {formatDuration(
+                    interview?.started_at,
+                    interview?.completed_at
+                  )}
                 </span>
               </div>
               <div className="flex items-center bg-teal-50 px-4 py-2 rounded-full">

@@ -16,33 +16,38 @@ interface TranscriptSidebarProps {
   conversation: Message[];
   setShowTranscript: (show: boolean) => void;
   formatTime: (seconds: number) => string;
-  elapsedTime: number;
 }
 
 export default function TranscriptSidebar({
   conversation,
   setShowTranscript,
   formatTime,
-  elapsedTime,
 }: TranscriptSidebarProps) {
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
 
+  console.log({ conversation });
+
   useEffect(() => {
     // Convert conversation to transcript format
-    const formattedTranscript = conversation.map((message, index) => ({
-      id: index + 1,
-      speaker:
-        message.role === "user"
-          ? ("You" as const)
-          : ("AI Interviewer" as const),
-      text: message.content,
-      time: formatTime(
-        Math.max(0, elapsedTime - (conversation.length - index) * 20)
-      ),
-    }));
+    const formattedTranscript = conversation.map((message, index) => {
+      // Get the created_at time from the message
+      const createdAt = message.createdAt || new Date().toISOString();
+      const date = new Date(createdAt);
+      const seconds = Math.floor(date.getTime() / 1000);
+
+      return {
+        id: index + 1,
+        speaker:
+          message.role === "user"
+            ? ("You" as const)
+            : ("AI Interviewer" as const),
+        text: message.content,
+        time: formatTime(seconds),
+      };
+    });
 
     setTranscript(formattedTranscript);
-  }, [conversation, elapsedTime, formatTime]);
+  }, [conversation, formatTime]);
 
   return (
     <div className="w-96 border-l border-gray-200/50 bg-white/80 backdrop-blur-xl p-6 overflow-y-auto">

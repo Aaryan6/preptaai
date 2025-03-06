@@ -43,7 +43,7 @@ export async function getUserResumeAnalyses(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("resume_analysis")
-    .select("id, file_name, doc_type, created_at, resume_text")
+    .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 

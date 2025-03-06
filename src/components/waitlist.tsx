@@ -21,12 +21,11 @@ export default function SignupSection() {
           />
           <div className="relative px-6 pb-14 pt-20 sm:px-10 sm:pb-20 lg:px-[4.5rem]">
             <h2 className="text-center text-balance mx-auto text-3xl md:text-5xl font-semibold tracking-[-0.015em] text-white">
-              Ready to signup and get started?
+              Ready to transform your career?
             </h2>
-            <p className="mt-4 max-w-[26rem] text-center mx-auto text-base/6 text-neutral-200">
+            <p className="mt-4 w-full text-center mx-auto text-base/6 text-neutral-200">
               <span className="inline-block align-top text-balance">
-                Get instant access to our state of the art AI tool and begin
-                transforming your workflow today.
+                Interview success starts right here, begin your journey now.
               </span>
             </p>
             <div className="relative z-10 mx-auto flex justify-center mt-6">
@@ -34,7 +33,7 @@ export default function SignupSection() {
                 asChild
                 className="bg-white text-slate-900 hover:bg-slate-100 text-base md:text-lg px-6 py-4 h-auto rounded-full font-medium"
               >
-                <Link href="/signup">Get Started</Link>
+                <Link href="/interview">Get Started</Link>
               </Button>
             </div>
           </div>

@@ -7,7 +7,7 @@ export function HeroSection() {
     <section className="py-12 md:py-20 px-4 md:px-6 relative">
       <div className="max-w-4xl mx-auto text-center">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-          Ace your interviews and land your dream job
+          Master your interview skills and get hired now
         </h1>
         <p className="text-xl text-muted-foreground dark:text-foreground/70 mb-8 max-w-2xl mx-auto">
           Practice with AI-powered mock interviews and get personalized feedback

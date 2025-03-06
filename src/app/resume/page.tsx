@@ -35,7 +35,7 @@ export default async function ResumePage() {
           </div>
         </div>
 
-        <div className="absolute bottom-100 right-20 hidden lg:block">
+        <div className="absolute top-[30rem] right-20 hidden lg:block">
           <div className="bg-white rounded-xl shadow-lg p-4 rotate-[5deg] w-64">
             <div className="flex items-center gap-2 mb-2">
               <div className="h-5 w-5 text-teal-500">⚡</div>

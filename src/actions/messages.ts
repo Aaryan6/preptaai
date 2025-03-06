@@ -1,10 +1,9 @@
 "use server";
 
-import { Message } from "ai";
 import { createClient } from "@/utils/supabase/server";
 import { ChatMessages } from "@/lib/types";
 
-export async function storeMessage(message: Message, interviewId: string) {
+export async function storeMessage(message: ChatMessages, interviewId: string) {
   const supabase = await createClient();
 
   const messageToStore = {
