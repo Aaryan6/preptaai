@@ -5,17 +5,15 @@ import { ContainerScroll } from "./ui/control-scroll-animation";
 
 export function AppPreview() {
   return (
-    <div className="">
-      <ContainerScroll titleComponent={<HeroSection />}>
-        <Image
-          src={Preview}
-          alt="hero"
-          height={720}
-          width={1400}
-          className="mx-auto rounded-2xl object-cover h-full object-left-top"
-          draggable={false}
-        />
-      </ContainerScroll>
-    </div>
+    <ContainerScroll titleComponent={<HeroSection />}>
+      <Image
+        src={Preview}
+        alt="hero"
+        height={720}
+        width={1400}
+        className="mx-auto rounded-2xl object-cover h-full object-left-top"
+        draggable={false}
+      />
+    </ContainerScroll>
   );
 }

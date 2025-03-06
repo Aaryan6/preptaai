@@ -4,12 +4,12 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="py-12 md:py-20 px-4 md:px-6 relative">
+    <section className="py-4 md:py-20 px-4 md:px-6 relative">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
           Master your interview skills and get hired now
         </h1>
-        <p className="text-xl text-muted-foreground dark:text-foreground/70 mb-8 max-w-2xl mx-auto">
+        <p className="text-base md:text-xl text-muted-foreground dark:text-foreground/70 mb-8 max-w-2xl mx-auto">
           Practice with AI-powered mock interviews and get personalized feedback
           on your resume. Built to help you succeed in your job search.
         </p>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export default function SignupSection() {
   return (
     <section className="py-16 px-4 md:py-24 relative">
-      <div className="mx-auto w-full relative z-20 sm:max-w-[40rem] md:max-w-[48rem] lg:max-w-[64rem] xl:max-w-[80rem] bg-gradient-to-br from-slate-800 dark:from-neutral-900 to-gray-900 sm:rounded-2xl">
+      <div className="mx-auto w-full relative z-20 sm:max-w-[40rem] md:max-w-[48rem] lg:max-w-[64rem] xl:max-w-[80rem] bg-gradient-to-br from-slate-800 dark:from-neutral-900 to-gray-900 rounded-2xl">
         <div className="relative -mx-6 sm:mx-0 sm:rounded-2xl overflow-hidden px-6 md:px-8">
           <div
             className="absolute inset-0 w-full h-full opacity-10 [mask-image:radial-gradient(#fff,transparent,75%)]"

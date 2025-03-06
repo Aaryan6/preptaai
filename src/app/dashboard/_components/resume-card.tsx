@@ -19,7 +19,7 @@ export function ResumeCard({
   score,
 }: ResumeCardProps) {
   return (
-    <Link href={`/resume/${id}`}>
+    <Link href={`/resume/${id}`} className="w-full max-w-sm">
       <Card className="p-6 hover:shadow-lg transition-shadow duration-200">
         <div className="flex items-start justify-between">
           <div className="space-y-4 flex-1 min-w-0 mr-4">

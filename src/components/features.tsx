@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function FeaturesSection() {
   return (
-    <section className="py-20 px-4">
+    <section className="py-12 md:py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <motion.div
@@ -21,7 +21,7 @@ export default function FeaturesSection() {
           </motion.div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -29,7 +29,7 @@ export default function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={`bg-card rounded-2xl p-6 hover:shadow-lg transition-shadow ${
-                index === 2 ? "col-span-2" : ""
+                index === 2 ? "md:col-span-2" : ""
               }`}
             >
               <div

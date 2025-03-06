@@ -4,7 +4,7 @@ export default async function ResumePage() {
   return (
     <div className="min-h-screen bg-dots-pattern relative overflow-hidden">
       <div className="container mx-auto px-4 py-16 max-w-5xl">
-        <div className="flex flex-col items-center text-center mb-12">
+        <div className="flex flex-col items-center text-center mb-12 z-10 relative">
           <div className="bg-teal-100 text-teal-800 rounded-full px-4 py-2 text-sm font-medium mb-6 flex items-center">
             <div className="bg-teal-500 rounded-full h-2 w-2 mr-2"></div>
             New! AI-powered resume analysis for better job matches
@@ -23,7 +23,7 @@ export default async function ResumePage() {
         </div>
 
         {/* Floating elements */}
-        <div className="absolute top-40 left-20 hidden lg:block">
+        <div className="absolute top-40 left-20 hidden lg:block z-0">
           <div className="bg-white rounded-xl shadow-lg p-4 rotate-[-10deg] w-64">
             <div className="flex items-center gap-2 mb-2">
               <div className="h-5 w-5 text-teal-500">⚡</div>

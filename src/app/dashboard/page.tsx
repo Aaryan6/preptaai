@@ -16,8 +16,6 @@ export default async function DashboardPage() {
     getUserResumeAnalyses(userId),
   ]);
 
-  console.log({ resumeAnalyses });
-
   return (
     <div className="h-screen overflow-y-auto bg-muted">
       <main className="flex-1">
@@ -62,32 +60,31 @@ export default async function DashboardPage() {
 
           {/* Resume Analyses Section */}
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
               Resume Analyses
             </h2>
             <p className="text-lg text-muted-foreground">
               Review your resume analyses and track improvements
             </p>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-full">
               {resumeAnalyses.length === 0 ? (
                 <div className="col-span-full text-center text-muted-foreground py-8">
                   No resume analyses found. Upload your resume to get started.
                 </div>
               ) : (
                 resumeAnalyses.map((analysis) => (
-                  <div key={analysis.id}>
-                    <ResumeCard
-                      id={analysis.id}
-                      fileName={analysis.file_name}
-                      docType={analysis.doc_type}
-                      date={
-                        analysis.created_at
-                          ? new Date(analysis?.created_at).toLocaleDateString()
-                          : "N/A"
-                      }
-                      score={analysis.metrics?.overall_score}
-                    />
-                  </div>
+                  <ResumeCard
+                    id={analysis.id}
+                    key={analysis.id}
+                    fileName={analysis.file_name}
+                    docType={analysis.doc_type}
+                    date={
+                      analysis.created_at
+                        ? new Date(analysis?.created_at).toLocaleDateString()
+                        : "N/A"
+                    }
+                    score={analysis.metrics?.overall_score}
+                  />
                 ))
               )}
             </div>
