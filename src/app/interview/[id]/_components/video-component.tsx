@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 
 export default function VideoComponent() {
   const { isVideoOn, stream } = useVideoStore();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     useVideoStore.setState({ videoRef });

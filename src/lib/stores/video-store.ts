@@ -4,7 +4,7 @@ import { RefObject } from "react";
 interface VideoState {
   isVideoOn: boolean;
   stream: MediaStream | null;
-  videoRef: RefObject<HTMLVideoElement> | null;
+  videoRef: RefObject<HTMLVideoElement | null> | null;
   toggleVideo: () => Promise<void>;
 }
 
